@@ -13,6 +13,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        // 外部キー制約の順序に従って実行
+        $this->call([
+            UsersTableSeeder::class,        // 1. ユーザー（他のテーブルから参照される）
+            AttendancesTableSeeder::class,  // 2. 勤怠（breaksから参照される）
+            BreaksTableSeeder::class,       // 3. 休憩（attendancesに依存）
+        ]);
     }
 }

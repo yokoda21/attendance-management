@@ -1,0 +1,27 @@
+/node_modules
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
+.env
+.env.backup
+.phpunit.result.cache
+docker-compose.override.yml
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+/.idea
+/.vscode
+# Dockerのデータファイル
+docker/mysql/data/
+
+# 一時ファイル・バックアップファイル
+*.bladecopy.php
+*.copy
+*.bak
+
+# その他の開発時の一時ファイル
+*.drawio~
+.DS_Store
+Thumbs.db
