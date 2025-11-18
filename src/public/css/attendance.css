@@ -1,25 +1,23 @@
+2025年11月18日　attendance.css完成（勤怠一覧画面）
+
 /* ========================================
    打刻画面専用スタイル (attendance.css)
    ======================================== */
-
 /* ページ全体の背景色（ヘッダーを除く） */
-body {
+body{
     background-color: #F0EFF2;
 }
-
 /* コンテナ全体 */
-.attendance-container {
+.attendance-container{
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: calc(100vh - 80px); /* ヘッダー分を引く */
-    background-color: #FFFFFF;
     padding: 40px 20px;
 }
-
 /* ステータスバッジ */
-.status-badge {
+.status-badge{
     display: inline-block;
     padding: 8px 24px;
     background-color: #D9D9D9;
@@ -29,35 +27,30 @@ body {
     border-radius: 20px;
     margin-bottom: 40px;
 }
-
 /* 現在日時表示エリア */
-.current-datetime {
+.current-datetime{
     text-align: center;
     margin-bottom: 60px;
 }
-
-.current-datetime #current-date {
+.current-datetime #current-date{
     font-size: 24px;
     font-weight: 400;
     color: #000000;
     margin: 0 0 20px 0;
 }
-
-.current-datetime #current-time {
+.current-datetime #current-time{
     font-size: 80px;
     font-weight: 700;
     color: #000000;
     margin: 0;
     line-height: 1;
 }
-
 /* ボタンコンテナ */
-.button-container {
+.button-container{
     display: flex;
     gap: 20px;
     margin-bottom: 40px;
 }
-
 /* ボタン共通スタイル */
 .attendance-container button[type="submit"] {
     width: 200px;
@@ -69,48 +62,41 @@ body {
     transition: opacity 0.3s;
     border: none;
 }
-
-.attendance-container button[type="submit"]:hover {
+.attendance-container button[type="submit"]:hover{
     opacity: 0.8;
 }
-
 /* 出勤ボタン（黒背景） */
-.btn-clock-in {
+.btn-clock-in{
     background-color: #000000;
     color: #FFFFFF;
 }
-
 /* 退勤ボタン（黒背景） */
-.btn-clock-out {
+.btn-clock-out{
     background-color: #000000;
     color: #FFFFFF;
 }
-
 /* 休憩開始ボタン（白背景+黒枠） */
-.btn-break-start {
+.btn-break-start{
     background-color: #FFFFFF;
     color: #000000;
     border: 2px solid #000000 !important;
 }
-
 /* 休憩終了ボタン（白背景+黒枠） */
-.btn-break-end {
+.btn-break-end{
     background-color: #FFFFFF;
     color: #000000;
     border: 2px solid #000000 !important;
 }
-
 /* 退勤後のメッセージ */
-.attendance-container h2 {
+.attendance-container h2{
     font-size: 24px;
     font-weight: 400;
     color: #000000;
     margin: 0 0 40px 0;
     text-align: center;
 }
-
 /* エラーメッセージ */
-.error-message {
+.error-message{
     margin-top: 20px;
     padding: 15px;
     background-color: #FFE5E5;
@@ -118,116 +104,236 @@ body {
     border-radius: 5px;
     text-align: center;
 }
-
-.error-message p {
+.error-message p{
     color: #FF0000;
     font-size: 16px;
     margin: 0;
 }
 
-
 /* ========================================
    勤怠一覧画面スタイル
    ======================================== */
-
 /* 勤怠一覧コンテナ */
-.attendance-list-container {
+.attendance-list-container{
     width: 940px;
     margin: 0 auto;
     padding: 40px 20px;
 }
-
 /* ページタイトル */
-.attendance-list-container h2 {
-    font-size: 28px;
+.attendance-list-container h2{
+    font-size: 30px;
     font-weight: 700;
     color: #000000;
     margin: 0 0 40px 0;
     padding-left: 20px;
-    border-left: 4px solid #000000;
+    border-left: 8px solid #000000;
 }
-
 /* 月選択 */
-.month-selector {
+.month-selector{
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     gap: 40px;
     margin-bottom: 40px;
     padding: 20px;
     background-color: #FFFFFF;
     border-radius: 10px;
 }
-
 .month-selector .btn-prev-month,
-.month-selector .btn-next-month {
+.month-selector .btn-next-month{
+    display: flex;
+    align-items: center;
+    gap: 8px;
     font-size: 16px;
     color: #000000;
     text-decoration: none;
     cursor: pointer;
 }
+.month-selector .arrow-icon{
+    width: 20px;
+    height: 15px;
+}
+.month-selector .btn-next-month .arrow-icon{
+    transform: rotate(180deg);
+}
 
-.month-selector .current-month-wrapper {
+.month-selector .current-month-wrapper{
     display: flex;
     align-items: center;
     gap: 8px;
 }
-
-.month-selector .calendar-icon {
+.month-selector .calendar-icon{
     width: 25px;
     height: 25px;
 }
-
-.month-selector .current-month {
+.month-selector .current-month{
     font-size: 20px;
     font-weight: 700;
     color: #000000;
 }
-
 /* 勤怠テーブル */
-.attendance-table {
+.attendance-table{
     width: 100%;
     background-color: #FFFFFF;
     border-collapse: collapse;
-    border-radius: 5px;
     overflow: hidden;
     border-radius: 10px;
-
 }
-
-.attendance-table thead {
+.attendance-table thead{
     background-color: #F0EFF2;
 }
-
-.attendance-table th {
+.attendance-table th{
+    height: 30px;
+    padding: 12px;
     background-color: #FFFFFF;
-    padding: 16px;
     text-align: center;
     font-size: 16px;
     font-family: 'Inter';
     font-weight: 700;
     color: #737373;
-    border: 1px solid #E0E0E0;
+    border: none;
+    border-bottom: 3px solid #E1E1E1;
 }
-
-.attendance-table td {
-    padding: 16px;
+.attendance-table td{
+    height: 30px;
+    padding: 12px;
     text-align: center;
     font-family: 'Inter';
     font-size: 16px;
     color: #737373;
-    border: 1px solid #E0E0E0;
+    border: none;
+    border-bottom: 3px solid #E1E1E1;
+}
+/* 詳細リンク */
+.btn-detail{
+    display: inline-block;
+    padding: 0;
+    background-color: transparent;
+    color: #000000;
+    font-size: 16px;
+    font-family: 'Inter';
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
 }
 
-/* 詳細ボタン */
-.btn-detail {
+/* ========================================
+   勤怠詳細画面スタイル
+   ======================================== */
+/* 勤怠詳細コンテナ */
+.attendance-detail-container{
+    width: 940px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+/* ページタイトル */
+.attendance-detail-container h2{
+    font-size: 30px;
+    font-weight: 700;
+    color: #000000;
+    margin: 0 0 40px 0;
+    padding-left: 20px;
+    border-left: 8px solid #000000;
+}
+/* 詳細カード */
+.detail-card{
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 40px;
+}
+/* 詳細行 */
+.detail-row{
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    border-bottom: 3px solid #E1E1E1;
+    min-height: 70px;
+    align-items: center;
+}
+.detail-row:last-child{
+    border-bottom: none;
+}
+/* ラベル */
+.detail-label{
+    padding: 20px 30px;
+    font-size: 16px;
+    font-weight: 400;
+    color: #737373;
+    font-family: 'Inter', sans-serif;
+}
+/* 値 */
+.detail-value{
+    padding: 20px 30px;
+    font-size: 16px;
+    font-weight: 400;
+    color: #000000;
+    font-family: 'Inter', sans-serif;
+}
+/* 時刻入力エリア */
+.time-range{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.time-input{
     display: inline-block;
-    padding: 8px 24px;
+    padding: 10px 20px;
+    background-color: #FFFFFF;
+    border: 1px solid #D9D9D9;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #000000;
+    min-width: 100px;
+    text-align: center;
+}
+.separator{
+    font-size: 16px;
+    color: #000000;
+}
+/* 備考エリア */
+.note-area{
+    padding: 15px;
+    background-color: #FFFFFF;
+    border: 1px solid #D9D9D9;
+    border-radius: 5px;
+    min-height: 80px;
+    font-size: 16px;
+    color: #000000;
+    line-height: 1.6;
+    width: 100%;
+    box-sizing: border-box;
+}
+/* 修正ボタン */
+.attendance-detail-container .button-container{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+.btn-correction{
+    display: inline-block;
+    width: 120px;
+    height: 48px;
+    line-height: 48px;
+    text-align: center;
     background-color: #000000;
     color: #FFFFFF;
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 700;
     text-decoration: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: opacity 0.3s;
 }
+.btn-correction:hover{
+    opacity: 0.8;
+}
+/* 承認待ちメッセージ */
+.pending-message{
+    text-align: right;
+    font-size: 16px;
+    color: #FF0000;
+    margin-top: 20px;
+}
+
+
+

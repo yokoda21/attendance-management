@@ -12,12 +12,18 @@
 
     <!-- 月選択 -->
     <div class="month-selector">
-        <a href="{{ route('attendance.list', ['month' => $prevMonth]) }}" class="btn-prev-month">← 前月</a>
+        <a href="{{ route('attendance.list', ['month' => $prevMonth]) }}" class="btn-prev-month">
+            <img src="{{ asset('images/arrow.png') }}" alt="前月" class="arrow-icon">
+            前月
+        </a>
         <div class="current-month-wrapper">
             <img src="{{ asset('images/calendar-icon.png') }}" alt="カレンダー" class="calendar-icon">
             <span class="current-month">{{ $date->format('Y/m') }}</span>
         </div>
-        <a href="{{ route('attendance.list', ['month' => $nextMonth]) }}" class="btn-next-month">翌月 →</a>
+        <a href="{{ route('attendance.list', ['month' => $nextMonth]) }}" class="btn-next-month">
+            翌月
+            <img src="{{ asset('images/arrow.png') }}" alt="翌月" class="arrow-icon">
+        </a>
     </div>
 
     <!-- 勤怠一覧テーブル -->

@@ -2,6 +2,10 @@
 
 @section('title', '勤怠詳細 - COACHTECH')
 
+@section('styles')
+<link rel="stylesheet" href="{{ asset('css/attendance.css') }}">
+@endsection
+
 @section('content')
 <div class="attendance-detail-container">
     <h2>勤怠詳細</h2>
@@ -53,9 +57,16 @@
         </div>
     </div>
 
-    <!-- 修正ボタン -->
-    <div class="button-container">
-        <a href="{{ route('attendance-correction.create', ['attendance_id' => $attendance->id]) }}" class="btn-correction">修正</a>
-    </div>
+    <!-- 承認待ちメッセージ -->
+    @if($attendance->correctionRequests()->where('status', 'pending')->exists())
+        <div class="pending-message">
+            * 承認待ちのため修正はできません。
+        </div>
+    @else
+        <!-- 修正ボタン -->
+        <div class="button-container">
+            <a href="{{ route('attendance-correction.create', ['attendance_id' => $attendance->id]) }}" class="btn-correction">修正</a>
+        </div>
+    @endif
 </div>
 @endsection

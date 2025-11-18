@@ -38,10 +38,13 @@ header nav li {
 
 header nav a {
     color: #FFFFFF;
-    font-size: 18px;
-    font-weight: 400;
+    font-family: inter;
+    font-size: 24px;
+    font-weight: 700;
+    background: none;
+    border: none;
+    padding: 0;
     text-decoration: none;
-    transition: opacity 0.3s;
 }
 
 header nav a:hover {
@@ -50,12 +53,11 @@ header nav a:hover {
 
 header nav button {
     color: #FFFFFF;
-    font-size: 18px;
-    font-weight: 400;
+    font-family: inter;
+    font-size: 24px;
+    font-weight: 700;
     background: none;
     border: none;
-    cursor: pointer;
-    transition: opacity 0.3s;
     padding: 0;
 }
 
@@ -80,7 +82,9 @@ main {
     align-items: center;
     justify-content: center;
     padding: 40px 20px;
+    background-color: #F0EFF2;
 }
+
 
 /* ========================================
    フォーム共通スタイル
