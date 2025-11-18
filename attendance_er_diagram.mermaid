@@ -1,0 +1,97 @@
+erDiagram
+    users ||--o{ attendances : "has many"
+    users ||--o{ attendance_correction_requests : "申請者"
+    users ||--o{ attendance_correction_requests : "承認者(approved_by)"
+    users ||--o{ attendances_histories : "変更者(changed_by)"
+    users ||--o{ break_histories : "変更者(changed_by)"
+    
+    attendances ||--o{ breaks : "has many"
+    attendances ||--o{ attendance_correction_requests : "has many"
+    attendances ||--o{ attendances_histories : "has many"
+    
+    attendance_correction_requests ||--o{ break_corrections : "has many"
+    
+    breaks ||--o{ break_histories : "has many"
+
+    users {
+        bigint id PK
+        string name
+        string email UK
+        timestamp email_verified_at
+        string password
+        string remember_token
+        tinyint role "0:一般ユーザー, 1:管理者"
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    attendances {
+        bigint id PK
+        bigint user_id FK
+        date date UK
+        time clock_in
+        time clock_out
+        string status "勤務外/出勤中/休憩中/退勤済"
+        text note
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    breaks {
+        bigint id PK
+        bigint attendance_id FK
+        time break_start
+        time break_end
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    attendance_correction_requests {
+        bigint id PK
+        bigint attendance_id FK
+        bigint user_id FK
+        time clock_in
+        time clock_out
+        text note
+        string status "承認待ち/承認済み"
+        timestamp approved_at
+        bigint approved_by FK
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    break_corrections {
+        bigint id PK
+        bigint correction_request_id FK
+        time break_start
+        time break_end
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    attendances_histories {
+        bigint id PK
+        bigint attendances_id FK
+        bigint changed_by FK
+        string changed_type "一般ユーザー申請/管理者直接修正"
+        time before_clock_in
+        time after_clock_in
+        time before_clock_out
+        time after_clock_out
+        text note
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    break_histories {
+        bigint id PK
+        bigint break_id FK
+        bigint changed_by FK
+        time before_break_start
+        time after_break_start
+        time before_break_end
+        time after_break_end
+        text note
+        timestamp created_at
+        timestamp updated_at
+    }

@@ -2,11 +2,21 @@
 
 @section('title', '打刻 - COACHTECH')
 
+@section('styles')
+<link rel="stylesheet" href="{{ asset('css/attendance.css') }}">
+@endsection
+
 @section('content')
 <div class="attendance-container">
-    <!-- 退勤後のみメッセージ表示 -->
-    @if($todayAttendance && $todayAttendance->status == \App\Models\Attendance::STATUS_CLOCKED_OUT)
-        <h2>お疲れ様でした。</h2>
+    <!-- ステータスバッジ -->
+    @if(!$todayAttendance)
+        <div class="status-badge">勤務外</div>
+    @elseif($todayAttendance->status == \App\Models\Attendance::STATUS_CLOCKED_IN)
+        <div class="status-badge">出勤中</div>
+    @elseif($todayAttendance->status == \App\Models\Attendance::STATUS_ON_BREAK)
+        <div class="status-badge">休憩中</div>
+    @elseif($todayAttendance->status == \App\Models\Attendance::STATUS_CLOCKED_OUT)
+        <div class="status-badge">退勤済</div>
     @endif
 
     <!-- 現在日時表示 -->
@@ -15,29 +25,34 @@
         <p id="current-time"></p>
     </div>
 
+    <!-- 退勤後のみメッセージ表示 -->
+    @if($todayAttendance && $todayAttendance->status == \App\Models\Attendance::STATUS_CLOCKED_OUT)
+        <h2>お疲れ様でした。</h2>
+    @endif
+
     <!-- 打刻ボタン -->
     <div class="button-container">
         @if(!$todayAttendance)
             <!-- 出勤前: 出勤ボタンのみ -->
             <form method="POST" action="{{ route('attendance.clockIn') }}">
                 @csrf
-                <button type="submit" class="btn-clock-in">出勤する</button>
+                <button type="submit" class="btn-clock-in">出勤</button>
             </form>
         @elseif($todayAttendance->status == \App\Models\Attendance::STATUS_CLOCKED_IN)
             <!-- 出勤後（休憩前）: 退勤・休憩ボタン -->
             <form method="POST" action="{{ route('attendance.clockOut') }}">
                 @csrf
-                <button type="submit" class="btn-clock-out">退勤する</button>
+                <button type="submit" class="btn-clock-out">退勤</button>
             </form>
             <form method="POST" action="{{ route('break.start') }}">
                 @csrf
-                <button type="submit" class="btn-break-start">休憩する</button>
+                <button type="submit" class="btn-break-start">休憩入</button>
             </form>
         @elseif($todayAttendance->status == \App\Models\Attendance::STATUS_ON_BREAK)
-            <!-- 休憩中: 休憩戻るボタンのみ -->
+            <!-- 休憩中: 休憩戻ボタンのみ -->
             <form method="POST" action="{{ route('break.end') }}">
                 @csrf
-                <button type="submit" class="btn-break-end">休憩戻る</button>
+                <button type="submit" class="btn-break-end">休憩戻</button>
             </form>
         @elseif($todayAttendance->status == \App\Models\Attendance::STATUS_CLOCKED_OUT)
             <!-- 退勤後: ボタンなし（メッセージは上部に「お疲れ様でした。」のみ） -->
@@ -75,14 +90,14 @@
         const hours = String(now.getHours()).padStart(2, '0');
         const minutes = String(now.getMinutes()).padStart(2, '0');
         const seconds = String(now.getSeconds()).padStart(2, '0');
-        const timeStr = `${hours}:${minutes}:${seconds}`;
+        const timeStr = `${hours}:${minutes}`;
         document.getElementById('current-time').textContent = timeStr;
     }
 
     // 初回実行
     updateDateTime();
     
-    // 1秒ごとに更新
-    setInterval(updateDateTime, 1000);
+    // 1分ごとに更新
+    setInterval(updateDateTime, 60000);
 </script>
 @endsection

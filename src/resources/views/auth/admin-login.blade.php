@@ -1,58 +1,31 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>管理者ログイン</title>
-</head>
-<body>
-    <header>
-        <h1>COACHTECH</h1>
-    </header>
+@extends('layouts.auth')
 
-    <main>
-        <div>
-            <h2>管理者ログイン</h2>
+@section('title', '管理者ログイン - COACHTECH')
 
-            <form method="POST" action="{{ route('admin.login') }}" novalidate>
-                @csrf
+@section('content')
+<div class="auth-form-container">
+    <h2 class="auth-form-title">管理者ログイン</h2>
 
-                <!-- メールアドレス -->
-                <div>
-                    <label for="email">メールアドレス</label>
-                    <input 
-                        id="email" 
-                        type="email" 
-                        name="email" 
-                        value="{{ old('email') }}" 
-                        required 
-                        autofocus
-                    >
-                    @error('email')
-                        <p>{{ $message }}</p>
-                    @enderror
-                </div>
+    <form method="POST" action="{{ route('admin.login') }}">
+        @csrf
 
-                <!-- パスワード -->
-                <div>
-                    <label for="password">パスワード</label>
-                    <input 
-                        id="password" 
-                        type="password" 
-                        name="password" 
-                        required
-                    >
-                    @error('password')
-                        <p>{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- 管理者ログインボタン -->
-                <div>
-                    <button type="submit">管理者ログインする</button>
-                </div>
-            </form>
+        <div class="form-group">
+            <label for="email" class="form-label">メールアドレス</label>
+            <input type="email" id="email" name="email" class="form-input" value="{{ old('email') }}" required autofocus>
+            @error('email')
+                <span class="error-message">{{ $message }}</span>
+            @enderror
         </div>
-    </main>
-</body>
-</html>
+
+        <div class="form-group">
+            <label for="password" class="form-label">パスワード</label>
+            <input type="password" id="password" name="password" class="form-input" required>
+            @error('password')
+                <span class="error-message">{{ $message }}</span>
+            @enderror
+        </div>
+
+        <button type="submit" class="form-button">管理者ログインする</button>
+    </form>
+</div>
+@endsection

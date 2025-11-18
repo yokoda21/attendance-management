@@ -50,8 +50,7 @@ class AttendanceController extends Controller
             'status' => Attendance::STATUS_CLOCKED_IN,
         ]);
 
-        return redirect()->route('attendance.index')
-            ->with('success', '出勤しました');
+        return redirect()->route('attendance.index');
     }
 
     /**
@@ -91,8 +90,7 @@ class AttendanceController extends Controller
             'status' => Attendance::STATUS_CLOCKED_OUT,
         ]);
 
-        return redirect()->route('attendance.index')
-            ->with('success', '退勤しました');
+        return redirect()->route('attendance.index');
     }
 
     /**

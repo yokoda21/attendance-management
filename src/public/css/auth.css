@@ -1,0 +1,35 @@
+/* ========================================
+   認証画面専用スタイル
+   ======================================== */
+
+/* 認証画面のメインコンテンツ */
+.auth-main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    background-color: #fff;
+}
+
+/* 認証フォームコンテナ */
+.auth-form-container {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    width: 680px;
+    height: auto;
+}
+
+/* 認証フォームタイトル */
+.auth-form-title {
+    text-align: center;
+    margin-bottom: 60px;
+    font-family: Inter;
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 100%;
+    color: #000000;
+}
+.header-logo {
+    height: 36px;
+}

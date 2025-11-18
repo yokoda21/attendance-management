@@ -53,8 +53,7 @@ class BreakController extends Controller
             'status' => Attendance::STATUS_ON_BREAK,
         ]);
 
-        return redirect()->route('attendance.index')
-            ->with('success', '休憩を開始しました');
+        return redirect()->route('attendance.index');
     }
 
     /**
@@ -102,7 +101,6 @@ class BreakController extends Controller
             'status' => Attendance::STATUS_CLOCKED_IN,
         ]);
 
-        return redirect()->route('attendance.index')
-            ->with('success', '休憩を終了しました');
+        return redirect()->route('attendance.index');
     }
 }

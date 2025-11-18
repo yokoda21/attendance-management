@@ -47,8 +47,8 @@ Route::get('/admin/login', [AdminLoginController::class, 'create'])->name('admin
 Route::post('/admin/login', [AdminLoginController::class, 'store']);
 Route::post('/admin/logout', [AdminLoginController::class, 'destroy'])->name('admin.logout');
 
-// 認証が必要なルート
-Route::middleware('auth')->group(function () {
+// 一般ユーザー用ルート（userミドルウェアで保護）
+Route::middleware(['auth', 'user'])->group(function () {
     // 打刻画面
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
 
@@ -74,10 +74,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/attendance-correction', [AttendanceCorrectionRequestController::class, 'store'])->name('attendance-correction.store');
 });
 
-// 管理者用ルート
-Route::prefix('admin')->middleware('auth')->group(function () {
+// 管理者用ルート（adminミドルウェアで保護）
+Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     // 日次勤怠一覧
-    Route::get('/attendances', [AdminAttendanceController::class, 'index'])->name('admin.attendances.index');
+    Route::get('/attendances', [AdminAttendanceController::class, 'index'])->name('admin. attendances.index');
     
     // 勤怠詳細（管理者）
     Route::get('/attendances/{id}', [AdminAttendanceController::class, 'show'])->name('admin.attendances.show');

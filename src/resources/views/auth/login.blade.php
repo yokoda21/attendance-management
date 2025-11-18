@@ -1,63 +1,33 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ログイン</title>
-</head>
-<body>
-    <header>
-        <h1>COACHTECH</h1>
-    </header>
+@extends('layouts.auth')
 
-    <main>
-        <div>
-            <h2>ログイン</h2>
+@section('title', 'ログイン - COACHTECH')
 
-            <form method="POST" action="{{ route('login') }}" novalidate>
-                @csrf
+@section('content')
+<div class="auth-form-container">
+    <h2 class="auth-form-title">ログイン</h2>
 
-                <!-- メールアドレス -->
-                <div>
-                    <label for="email">メールアドレス</label>
-                    <input 
-                        id="email" 
-                        type="email" 
-                        name="email" 
-                        value="{{ old('email') }}" 
-                        required 
-                        autofocus
-                    >
-                    @error('email')
-                        <p>{{ $message }}</p>
-                    @enderror
-                </div>
+    <form method="POST" action="{{ route('login') }}">
+        @csrf
 
-                <!-- パスワード -->
-                <div>
-                    <label for="password">パスワード</label>
-                    <input 
-                        id="password" 
-                        type="password" 
-                        name="password" 
-                        required
-                    >
-                    @error('password')
-                        <p>{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- ログインボタン -->
-                <div>
-                    <button type="submit">ログインする</button>
-                </div>
-
-                <!-- 会員登録リンク -->
-                <div>
-                    <a href="{{ route('register') }}">会員登録はこちら</a>
-                </div>
-            </form>
+        <div class="form-group">
+            <label for="email" class="form-label">メールアドレス</label>
+            <input type="email" id="email" name="email" class="form-input" value="{{ old('email') }}" required autofocus>
+            @error('email')
+                <span class="error-message">{{ $message }}</span>
+            @enderror
         </div>
-    </main>
-</body>
-</html>
+
+        <div class="form-group">
+            <label for="password" class="form-label">パスワード</label>
+            <input type="password" id="password" name="password" class="form-input" required>
+            @error('password')
+                <span class="error-message">{{ $message }}</span>
+            @enderror
+        </div>
+
+        <button type="submit" class="form-button">ログインする</button>
+    </form>
+
+    <a href="{{ route('register') }}" class="form-link">会員登録はこちら</a>
+</div>
+@endsection
