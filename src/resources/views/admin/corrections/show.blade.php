@@ -1,5 +1,12 @@
 @extends('layouts.admin')
 
+@section('title', '勤怠修正申請詳細 - 管理者')
+
+@section('styles')
+<link rel="stylesheet" href="{{ asset('css/admin-common.css') }}">
+<link rel="stylesheet" href="{{ asset('css/admin-correction-detail.css') }}">
+@endsection
+
 @section('content')
 <div class="attendance-detail-container">
     <h2 class="attendance-detail-title">勤怠詳細</h2>
@@ -32,20 +39,20 @@
 
         <!-- 休憩 -->
         @php
-            $breakCorrections = $correctionRequest->breakCorrections->sortBy('break_start');
+        $breakCorrections = $correctionRequest->breakCorrections->sortBy('break_start');
         @endphp
-        
+
         @foreach($breakCorrections as $index => $breakCorrection)
-            <div class="detail-row">
-                <div class="detail-label">休憩{{ $index > 0 ? ($index + 1) : '' }}</div>
-                <div class="detail-value">
-                    @if($breakCorrection->break_start && $breakCorrection->break_end)
-                        {{ \Carbon\Carbon::parse($breakCorrection->break_start)->format('H:i') }}
-                        ～
-                        {{ \Carbon\Carbon::parse($breakCorrection->break_end)->format('H:i') }}
-                    @endif
-                </div>
+        <div class="detail-row">
+            <div class="detail-label">休憩{{ $index > 0 ? ($index + 1) : '' }}</div>
+            <div class="detail-value">
+                @if($breakCorrection->break_start && $breakCorrection->break_end)
+                {{ \Carbon\Carbon::parse($breakCorrection->break_start)->format('H:i') }}
+                ～
+                {{ \Carbon\Carbon::parse($breakCorrection->break_end)->format('H:i') }}
+                @endif
             </div>
+        </div>
         @endforeach
 
         <!-- 備考（申請理由） -->
@@ -56,18 +63,16 @@
     </div>
 
     <!-- 承認ボタン -->
-    @if($correctionRequest->status === \App\Models\AttendanceCorrectionRequest::STATUS_PENDING)
-        <div class="approve-button-container">
-            <form method="POST" action="{{ route('admin.corrections.approve', $correctionRequest->id) }}">
-                @csrf
-                @method('PUT')
-                <button type="submit" class="approve-button">承認</button>
-            </form>
-        </div>
-    @else
-        <div class="approved-message">
-            この申請は既に承認済みです。
-        </div>
-    @endif
+    <div class="approve-button-container">
+        @if($correctionRequest->status === \App\Models\AttendanceCorrectionRequest::STATUS_PENDING)
+        <form method="POST" action="{{ route('admin.corrections.approve', $correctionRequest->id) }}">
+            @csrf
+            @method('PUT')
+            <button type="submit" class="approve-button">承認</button>
+        </form>
+        @else
+        <button type="button" class="approved-button" disabled>承認済み</button>
+        @endif
+    </div>
 </div>
 @endsection

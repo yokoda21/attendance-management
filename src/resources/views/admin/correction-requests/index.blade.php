@@ -1,5 +1,11 @@
 @extends('layouts.admin')
 
+@section('title', '勤怠修正申請一覧 - 管理者')
+@section('styles')
+<link rel="stylesheet" href="{{ asset('css/admin-common.css') }}">
+<link rel="stylesheet" href="{{ asset('css/admin-correction-requests.css') }}">
+@endsection
+
 @section('content')
 <div class="correction-requests-container">
     <h1 class="page-title">申請一覧</h1>

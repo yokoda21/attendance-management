@@ -133,8 +133,11 @@ a {
     padding: 0;
     font-size: 100%;
     vertical-align: baseline;
-    background: transparent;
+    background: transparent;    
+    text-decoration: none;  /* アンダーラインを削除 */    
 }
+
+
 
 /* change colours to suit your needs */
 ins {

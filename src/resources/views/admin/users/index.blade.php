@@ -2,8 +2,13 @@
 
 @section('title', 'スタッフ一覧 - 管理者')
 
+@section('styles')
+<link rel="stylesheet" href="{{ asset('css/admin-common.css') }}">
+<link rel="stylesheet" href="{{ asset('css/admin-staff.css') }}">
+@endsection
+
 @section('content')
-<div class="staff-list-container">
+<div class="admin-container">
     <h2>スタッフ一覧</h2>
     
     <table class="staff-table">
@@ -20,7 +25,7 @@
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
                 <td>
-                    <a href="{{ route('admin.users.attendances', $user->id) }}" class="detail-link">
+                    <a href="{{ route('admin.users.attendances', $user->id) }}" class="btn-detail">
                         詳細
                     </a>
                 </td>

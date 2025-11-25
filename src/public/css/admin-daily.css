@@ -1,0 +1,89 @@
+/* 管理者：日次勤怠一覧CSS */
+
+/* 日付選択ナビゲーション */
+.admin-container .date-selector {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    margin-bottom: 40px;
+    padding: 20px;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+}
+
+.admin-container .date-selector .btn-prev-date,
+.admin-container .date-selector .btn-next-date {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #737373;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.admin-container .date-selector .arrow-icon {
+    width: 20px;
+    height: 15px;
+}
+
+.admin-container .date-selector .btn-next-date .arrow-icon {
+    transform: rotate(180deg);
+}
+
+.admin-container .date-selector .current-date-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.admin-container .date-selector .calendar-icon {
+    width: 25px;
+    height: 25px;
+}
+
+.admin-container .date-selector .current-date {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000000;
+}
+
+/* 勤怠テーブル */
+.admin-container .admin-attendance-table {
+    width: 100%;
+    background-color: #FFFFFF;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.admin-container .admin-attendance-table thead {
+    background-color: #FFFFFF;
+}
+
+.admin-container .admin-attendance-table th {
+    height: 30px;
+    padding: 12px;
+    background-color: #FFFFFF;
+    text-align: center;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    color: #737373;
+    border: none;
+    border-bottom: 2px solid #E1E1E1;
+}
+
+.admin-container .admin-attendance-table td {
+    height: 30px;
+    padding: 12px;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #737373;
+    border: none;
+    border-bottom: 2px solid #E1E1E1;
+}

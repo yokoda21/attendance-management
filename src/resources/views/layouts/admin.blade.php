@@ -5,12 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', '管理者 - COACHTECH')</title>
+
+    <!-- CSS読み込み -->
+    <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/common.css') }}">
+    @yield('styles')
+
 </head>
 
 <body>
     <header>
         <div class="header-container">
-            <h1>COACHTECH</h1>
+            <h1>
+                <img src="{{ asset('images/logo.svg') }}" alt="COACHTECH" style="height: 36px;">
+            </h1>
             <nav>
                 <ul>
                     <li><a href="{{ route('admin.attendances.index') }}">勤怠一覧</a></li>

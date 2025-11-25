@@ -2,6 +2,10 @@
 
 @section('title', '申請一覧 - COACHTECH')
 
+@section('styles')
+<link rel="stylesheet" href="{{ asset('css/correction.css') }}">
+@endsection
+
 @section('content')
 <div class="attendance-correction-index-container">
     <h2>申請一覧</h2>

@@ -1,0 +1,38 @@
+/* スタッフ一覧画面CSS */
+
+/* スタッフテーブル */
+.staff-table {
+    width: 100%;
+    background-color: #FFFFFF;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.staff-table thead {
+    background-color: #FFFFFF;
+}
+
+.staff-table th {
+    height: 30px;
+    padding: 12px;
+    background-color: #FFFFFF;
+    text-align: center;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    color: #737373;
+    border: none;
+    border-bottom: 3px solid #E1E1E1;
+}
+
+.staff-table td {
+    height: 30px;
+    padding: 12px;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    color: #737373;
+    border: none;
+    border-bottom: 3px solid #E1E1E1;
+}

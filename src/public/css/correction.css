@@ -1,0 +1,121 @@
+/* ========================================
+   申請一覧画面スタイル (correction.css)
+   ======================================== */
+
+/* 申請一覧コンテナ */
+.attendance-correction-index-container {
+    width: 940px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+/* ページタイトル */
+.attendance-correction-index-container h2 {
+    font-size: 30px;
+    font-weight: 700;
+    color: #000000;
+    margin: 0 0 40px 0;
+    padding-left: 20px;
+    border-left: 8px solid #000000;
+}
+
+/* タブコンテナ */
+.tab-container {
+    display: flex;
+    gap: 0;
+    margin-bottom: 40px;
+    border-bottom: 3px solid #E1E1E1;
+}
+
+/* タブボタン */
+.tab-button {
+    padding: 16px 40px;
+    background-color: transparent;
+    border: none;
+    font-size: 18px;
+    font-weight: 400;
+    color: #737373;
+    cursor: pointer;
+    transition: all 0.3s;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -3px;
+}
+
+.tab-button.active {
+    font-weight: 700;
+    color: #000000;
+    border-bottom: 3px solid #000000;
+}
+
+/* タブコンテンツ */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* データなしメッセージ */
+.no-data {
+    text-align: center;
+    padding: 40px;
+    font-size: 16px;
+    color: #737373;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+}
+
+/* 申請テーブル */
+.correction-table {
+    width: 100%;
+    background-color: #FFFFFF;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.correction-table thead {
+    background-color: #FFFFFF;
+}
+
+.correction-table th {
+    height: 30px;
+    padding: 12px;
+    background-color: #FFFFFF;
+    text-align: center;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    color: #737373;
+    border: none;
+    border-bottom: 3px solid #E1E1E1;
+}
+
+.correction-table td {
+    height: 30px;
+    padding: 12px;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    color: #737373;
+    border: none;
+    border-bottom: 3px solid #E1E1E1;
+}
+
+/* 詳細リンク */
+.correction-table .btn-detail {
+    display: inline-block;
+    padding: 0;
+    background-color: transparent;
+    color: #000000;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.correction-table .btn-detail:hover {
+    opacity: 0.7;
+}

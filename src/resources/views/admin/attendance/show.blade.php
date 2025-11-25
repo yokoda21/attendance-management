@@ -2,6 +2,11 @@
 
 @section('title', '勤怠詳細 - 管理者')
 
+@section('styles')
+<link rel="stylesheet" href="{{ asset('css/admin-common.css') }}">
+<link rel="stylesheet" href="{{ asset('css/admin-attendance-detail.css') }}">
+@endsection
+
 @section('content')
 <div class="attendance-detail-container">
     <h2>勤怠詳細</h2>
@@ -91,11 +96,11 @@
             <div class="detail-row">
                 <div class="detail-label">出勤・退勤</div>
                 <div class="detail-value time-range">
-                    <input type="time" name="clock_in" class="time-input" 
+                    <input type="text" name="clock_in" class="time-input" 
                            value="{{ old('clock_in', $attendance->clock_in ? \Carbon\Carbon::parse($attendance->clock_in)->format('H:i') : '') }}" 
                            required>
                     <span class="separator">～</span>
-                    <input type="time" name="clock_out" class="time-input" 
+                    <input type="text" name="clock_out" class="time-input" 
                            value="{{ old('clock_out', $attendance->clock_out ? \Carbon\Carbon::parse($attendance->clock_out)->format('H:i') : '') }}" 
                            required>
                 </div>
@@ -111,10 +116,10 @@
             <div class="detail-row">
                 <div class="detail-label">休憩{{ $index > 0 ? $index + 1 : '' }}</div>
                 <div class="detail-value time-range">
-                    <input type="time" name="breaks[{{ $index }}][break_start]" class="time-input" 
+                    <input type="text" name="breaks[{{ $index }}][break_start]" class="time-input" 
                            value="{{ old('breaks.'.$index.'.break_start', $break->break_start ? \Carbon\Carbon::parse($break->break_start)->format('H:i') : '') }}">
                     <span class="separator">～</span>
-                    <input type="time" name="breaks[{{ $index }}][break_end]" class="time-input" 
+                    <input type="text" name="breaks[{{ $index }}][break_end]" class="time-input" 
                            value="{{ old('breaks.'.$index.'.break_end', $break->break_end ? \Carbon\Carbon::parse($break->break_end)->format('H:i') : '') }}">
                 </div>
                 @error('breaks.'.$index.'.break_start')
@@ -135,10 +140,10 @@
             <div class="detail-row">
                 <div class="detail-label">休憩{{ $i > 0 ? $i + 1 : ($i === 0 ? '' : '2') }}</div>
                 <div class="detail-value time-range">
-                    <input type="time" name="breaks[{{ $i }}][break_start]" class="time-input" 
+                    <input type="text" name="breaks[{{ $i }}][break_start]" class="time-input" 
                            value="{{ old('breaks.'.$i.'.break_start') }}">
                     <span class="separator">～</span>
-                    <input type="time" name="breaks[{{ $i }}][break_end]" class="time-input" 
+                    <input type="text" name="breaks[{{ $i }}][break_end]" class="time-input" 
                            value="{{ old('breaks.'.$i.'.break_end') }}">
                 </div>
             </div>
@@ -148,7 +153,7 @@
             <div class="detail-row">
                 <div class="detail-label">備考</div>
                 <div class="detail-value">
-                    <textarea name="note" class="note-textarea" placeholder="備考を入力してください">{{ old('note') }}</textarea>
+                    <textarea name="note" class="note-textarea" >{{ old('note') }}</textarea>
                 </div>
             </div>
         </div>

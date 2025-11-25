@@ -1,0 +1,128 @@
+/* 管理者：スタッフ別勤怠一覧CSS */
+
+/* 日付選択ナビゲーション */
+.user-attendance-list-container .date-selector {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    margin-bottom: 40px;
+    padding: 20px;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+}
+
+.user-attendance-list-container .date-selector .btn-prev-date,
+.user-attendance-list-container .date-selector .btn-next-date {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    color: #000000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.user-attendance-list-container .date-selector .arrow-icon {
+    width: 20px;
+    height: 15px;
+}
+
+.user-attendance-list-container .date-selector .btn-next-date .arrow-icon {
+    transform: rotate(180deg);
+}
+
+.user-attendance-list-container .date-selector .current-date-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.user-attendance-list-container .date-selector .calendar-icon {
+    width: 25px;
+    height: 25px;
+}
+
+.user-attendance-list-container .date-selector .current-date {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000000;
+}
+
+/* 勤怠テーブル */
+.user-attendance-list-container .attendance-table {
+    width: 100%;
+    background-color: #FFFFFF;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 10px;
+    margin-bottom: 40px;
+}
+
+.user-attendance-list-container .attendance-table thead {
+    background-color: #FFFFFF;
+}
+
+.user-attendance-list-container .attendance-table th {
+    height: 30px;
+    padding: 12px;
+    background-color: #FFFFFF;
+    text-align: center;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    color: #737373;
+    border: none;
+    border-bottom: 3px solid #E1E1E1;
+}
+
+.user-attendance-list-container .attendance-table td {
+    height: 30px;
+    padding: 12px;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    color: #737373;
+    border: none;
+    border-bottom: 3px solid #E1E1E1;
+}
+
+/* 詳細リンク */
+.user-attendance-list-container .attendance-table td .btn-detail {
+    display: inline-block;
+    padding: 0;
+    background-color: transparent;
+    color: #000000;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.user-attendance-list-container .attendance-table td .btn-detail.disabled {
+    color: #000000;
+    cursor: pointer;
+}
+
+/* CSV出力ボタンコンテナ */
+.csv-export-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+/* CSV出力ボタン */
+.csv-button {
+    display: inline-block;
+    padding: 12px 40px;
+    background-color: #000000;
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

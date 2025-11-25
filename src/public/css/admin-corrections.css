@@ -1,0 +1,74 @@
+/* 申請一覧画面CSS */
+
+/* タブコンテナ */
+.admin-tab-container {
+    display: flex;
+    gap: 0;
+    margin-bottom: 40px;
+    border-bottom: 3px solid #E1E1E1;
+}
+
+/* タブボタン */
+.admin-tab-button {
+    padding: 16px 40px;
+    background-color: transparent;
+    border: none;
+    font-size: 18px;
+    font-weight: 400;
+    color: #737373;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -3px;
+}
+
+.admin-tab-button.active {
+    font-weight: 700;
+    color: #000000;
+    border-bottom: 3px solid #000000;
+}
+
+/* タブコンテンツ */
+.admin-tab-content {
+    display: none;
+}
+
+.admin-tab-content.active {
+    display: block;
+}
+
+/* 申請テーブル */
+.admin-correction-table {
+    width: 100%;
+    background-color: #FFFFFF;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.admin-correction-table thead {
+    background-color: #FFFFFF;
+}
+
+.admin-correction-table th {
+    height: 30px;
+    padding: 12px;
+    background-color: #FFFFFF;
+    text-align: center;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    color: #737373;
+    border: none;
+    border-bottom: 3px solid #E1E1E1;
+}
+
+.admin-correction-table td {
+    height: 30px;
+    padding: 12px;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    color: #737373;
+    border: none;
+    border-bottom: 3px solid #E1E1E1;
+}

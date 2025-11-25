@@ -2,26 +2,33 @@
 
 @section('title', '勤怠一覧 - 管理者')
 
+@section('styles')
+<link rel="stylesheet" href="{{ asset('css/admin-common.css') }}">
+<link rel="stylesheet" href="{{ asset('css/admin-daily.css') }}">
+@endsection
+
 @section('content')
-<div class="attendance-list-container">
+<div class="admin-container">
     <h2>{{ $targetDate->format('Y年n月j日') }}の勤怠</h2>
     
-    <div class="date-navigation">
-        <a href="{{ route('admin.attendances.index', ['date' => $previousDate]) }}" class="nav-button">
-            ← 前日
+    <div class="date-selector">
+        <a href="{{ route('admin.attendances.index', ['date' => $previousDate]) }}" class="btn-prev-date">
+            <img src="{{ asset('images/arrow.png') }}" alt="前日" class="arrow-icon">
+            前日
         </a>
         
-        <div class="current-date">
-            <span class="calendar-icon">📅</span>
-            <span class="date-text">{{ $targetDate->format('Y/m/d') }}</span>
+        <div class="current-date-wrapper">
+            <img src="{{ asset('images/calendar-icon.png') }}" alt="カレンダー" class="calendar-icon">
+            <span class="current-date">{{ $targetDate->format('Y/m/d') }}</span>
         </div>
         
-        <a href="{{ route('admin.attendances.index', ['date' => $nextDate]) }}" class="nav-button">
-            翌日 →
+        <a href="{{ route('admin.attendances.index', ['date' => $nextDate]) }}" class="btn-next-date">
+            翌日
+            <img src="{{ asset('images/arrow.png') }}" alt="翌日" class="arrow-icon">
         </a>
     </div>
     
-    <table class="attendance-table">
+    <table class="admin-attendance-table">
         <thead>
             <tr>
                 <th>名前</th>
@@ -41,7 +48,7 @@
                 <td>{{ $attendance->total_break ?? '-' }}</td>
                 <td>{{ $attendance->total_work ?? '-' }}</td>
                 <td>
-                    <a href="{{ route('admin.attendances.show', $attendance->id) }}" class="detail-link">
+                    <a href="{{ route('admin.attendances.show', $attendance->id) }}" class="btn-detail">
                         詳細
                     </a>
                 </td>
