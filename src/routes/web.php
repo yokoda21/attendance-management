@@ -66,10 +66,10 @@ Route::middleware(['auth', 'user'])->group(function () {
     // 勤怠詳細（ルートの順序重要：listの後に配置）
     Route::get('/attendance/{id}', [AttendanceController::class, 'detail'])->name('attendance.detail');
 
-    // 修正申請一覧
+    // 申請一覧
     Route::get('/attendance-correction', [AttendanceCorrectionRequestController::class, 'index'])->name('attendance-correction.index');
 
-    // 修正申請作成
+    // 申請作成
     Route::get('/attendance-correction/create', [AttendanceCorrectionRequestController::class, 'create'])->name('attendance-correction.create');
     Route::post('/attendance-correction', [AttendanceCorrectionRequestController::class, 'store'])->name('attendance-correction.store');
 });
@@ -86,20 +86,20 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::put('/attendances/{id}', [AdminAttendanceController::class, 'update'])->name('admin.attendances.update');
 
     // スタッフ一覧
-    Route::get('/users', [AdminUserController::class, 'index'])->name('admin.users.index');
+    Route::get('/staff/list', [AdminUserController::class, 'index'])->name('admin.staff.list');
 
     // スタッフ別月次勤怠一覧
-    Route::get('/users/{user_id}/attendances', [AdminUserController::class, 'attendances'])->name('admin.users.attendances');
+    Route::get('/attendance/staff/{user_id}', [AdminUserController::class, 'attendances'])->name('admin.attendance.staff');
 
     // CSV出力
-    Route::get('/users/{user_id}/attendances/csv', [AdminUserController::class, 'exportCsv'])->name('admin.users.attendances.csv');
+    Route::get('/attendance/staff/{user_id}/csv', [AdminUserController::class, 'exportCsv'])->name('admin.attendance.staff.csv');
 
-    // 修正申請一覧
+    // 申請一覧
     Route::get('/corrections', [AdminCorrectionController::class, 'index'])->name('admin.corrections.index');
 
     // 修正申請承認（詳細より前に配置）
     Route::put('/corrections/{id}/approve', [AdminCorrectionController::class, 'approve'])->name('admin.corrections.approve');
 
-    // 修正申請詳細
+    // 申請詳細
     Route::get('/corrections/{id}', [AdminCorrectionController::class, 'show'])->name('admin.corrections.show');
 });

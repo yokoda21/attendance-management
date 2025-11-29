@@ -22,7 +22,7 @@
             <nav>
                 <ul>
                     <li><a href="{{ route('admin.attendances.index') }}">勤怠一覧</a></li>
-                    <li><a href="{{ route('admin.users.index') }}">スタッフ一覧</a></li>
+                    <li><a href="{{ route('admin.staff.list') }}">スタッフ一覧</a></li>
                     <li><a href="{{ route('admin.corrections.index') }}">申請一覧</a></li>
                     <li>
                         <form method="POST" action="{{ route('admin.logout') }}">

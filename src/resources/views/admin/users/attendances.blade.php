@@ -12,7 +12,7 @@
     <h2>{{ $user->name }}さんの勤怠</h2>
 
     <div class="date-selector">
-        <a href="{{ route('admin.users.attendances', ['user_id' => $user->id, 'month' => $previousMonth]) }}" class="btn-prev-date">
+        <a href="{{ route('admin.attendance.staff', ['user_id' => $user->id]) }}" class=" btn-prev-date">
             <img src="{{ asset('images/arrow.png') }}" alt="前月" class="arrow-icon">
             前月
         </a>
@@ -22,7 +22,7 @@
             <span class="current-date">{{ $targetMonth->format('Y/m') }}</span>
         </div>
 
-        <a href="{{ route('admin.users.attendances', ['user_id' => $user->id, 'month' => $nextMonth]) }}" class="btn-next-date">
+        <a href="{{ route('admin.attendance.staff', ['user_id' => $user->id, 'month' => $nextMonth]) }}" class="btn-next-date">
             翌月
             <img src="{{ asset('images/arrow.png') }}" alt="翌月" class="arrow-icon arrow-right">
         </a>
@@ -65,7 +65,7 @@
                     <td>{{ $attendance->total_break }}</td>
                     <td>{{ $attendance->total_work }}</td>
                     <td>
-                        <a href="{{ route('admin.attendances.show', $attendance->id) }}" class="btn-detail">
+                        <a href="{{ route('admin.attendances.show', ['id' => $attendance->id]) }}" class="btn-detail">
                             詳細
                         </a>
                     </td>
@@ -84,7 +84,7 @@
     </table>
 
     <div class="csv-export-container">
-        <a href="{{ route('admin.users.attendances.csv', ['user_id' => $user->id, 'month' => $targetMonth->format('Y-m')]) }}" class="csv-button">
+        <a href="{{route('admin.attendance.staff.csv',  ['user_id' => $user->id, 'month' => $targetMonth->format('Y-m')]) }}" class="csv-button">
             CSV出力
         </a>
     </div>

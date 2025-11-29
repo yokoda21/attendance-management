@@ -1,0 +1,117 @@
+/* 勤怠一覧画面スタイル (attendance-list.css) */
+
+/* 勤怠一覧コンテナ */
+.attendance-list-container {
+    width: 940px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+/* ページタイトル */
+.attendance-list-container h2 {
+    font-size: 30px;
+    font-weight: 700;
+    color: #000000;
+    margin: 0 0 40px 0;
+    padding-left: 20px;
+    border-left: 8px solid #000000;
+}
+
+/* 月選択 */
+.month-selector {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    margin-bottom: 40px;
+    padding: 20px;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+}
+
+.month-selector .btn-prev-month,
+.month-selector .btn-next-month {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    color: #000000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.month-selector .arrow-icon {
+    width: 20px;
+    height: 15px;
+}
+
+.month-selector .btn-next-month .arrow-icon {
+    transform: rotate(180deg);
+}
+
+.month-selector .current-month-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.month-selector .calendar-icon {
+    width: 25px;
+    height: 25px;
+}
+
+.month-selector .current-month {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000000;
+}
+
+/* 勤怠テーブル */
+.attendance-table {
+    width: 100%;
+    background-color: #FFFFFF;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.attendance-table thead {
+    background-color: #F0EFF2;
+}
+
+.attendance-table th {
+    height: 30px;
+    padding: 12px;
+    background-color: #FFFFFF;
+    text-align: center;
+    font-size: 16px;
+    font-family: 'Inter';
+    font-weight: 700;
+    color: #737373;
+    border: none;
+    border-bottom: 3px solid #E1E1E1;
+}
+
+.attendance-table td {
+    height: 30px;
+    padding: 12px;
+    text-align: center;
+    font-family: 'Inter';
+    font-size: 16px;
+    color: #737373;
+    border: none;
+    border-bottom: 3px solid #E1E1E1;
+}
+
+/* 詳細リンク */
+.btn-detail {
+    display: inline-block;
+    padding: 0;
+    background-color: transparent;
+    color: #000000;
+    font-size: 16px;
+    font-family: 'Inter';
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+}
