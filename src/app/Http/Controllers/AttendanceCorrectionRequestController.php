@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Attendance;
 use App\Models\AttendanceCorrectionRequest;
 use App\Models\BreakCorrection;
+use App\Http\Requests\AttendanceCorrectionStoreRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -41,7 +42,7 @@ class AttendanceCorrectionRequestController extends Controller
     public function create(Request $request)
     {
         $attendanceId = $request->query('attendance_id');
-        
+
         // 勤怠データを取得
         $attendance = Attendance::with('breaks', 'user')->findOrFail($attendanceId);
 
@@ -61,29 +62,9 @@ class AttendanceCorrectionRequestController extends Controller
     /**
      * 修正申請を保存
      */
-    public function store(Request $request)
+    public function store(AttendanceCorrectionStoreRequest $request)
     {
-        // バリデーション
-        $validated = $request->validate([
-            'attendance_id' => 'required|exists:attendances,id',
-            'clock_in' => 'required|date_format:H:i',
-            'clock_out' => 'required|date_format:H:i|after:clock_in',
-            'breaks' => 'nullable|array',
-            'breaks.*.break_start' => 'nullable|date_format:H:i',
-            'breaks.*.break_end' => 'nullable|date_format:H:i|after:breaks.*.break_start',
-            'note' => 'required|string|max:500',
-        ], [
-            'clock_in.required' => '出勤時間を入力してください',
-            'clock_in.date_format' => '出勤時間の形式が正しくありません',
-            'clock_out.required' => '退勤時間を入力してください',
-            'clock_out.date_format' => '退勤時間の形式が正しくありません',
-            'clock_out.after' => '出勤時間もしくは退勤時間が不適切な値です',
-            'breaks.*.break_start.date_format' => '休憩時間の形式が正しくありません',
-            'breaks.*.break_end.date_format' => '休憩時間の形式が正しくありません',
-            'breaks.*.break_end.after' => '休憩時間が不適切な値です',
-            'note.required' => '備考を記入してください',
-            'note.max' => '備考は500文字以内で入力してください',
-        ]);
+        $validated = $request->validated();
 
         // 勤怠データを取得
         $attendance = Attendance::findOrFail($validated['attendance_id']);
@@ -123,7 +104,6 @@ class AttendanceCorrectionRequestController extends Controller
 
             return redirect()->route('attendance-correction.index')
                 ->with('success', '修正申請を送信しました');
-
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withInput()->with('error', '修正申請の送信に失敗しました');
