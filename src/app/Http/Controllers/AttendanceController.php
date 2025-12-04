@@ -146,14 +146,38 @@ class AttendanceController extends Controller
      * @param  int  $id
      * @return \Illuminate\View\View
      */
-    public function detail($id)
+    public function detail(Request $request, $id)
     {
-        // 指定された勤怠データを取得
-        $attendance = Attendance::with('breaks', 'user')->findOrFail($id);
+        // IDが日付形式（Y-m-d）かどうかを判定
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $id)) {
+            // 日付形式の場合
+            $date = Carbon::createFromFormat('Y-m-d', $id);
 
-        // ログイン中のユーザーの勤怠データか確認
-        if ($attendance->user_id !== Auth::id()) {
-            abort(403, '権限がありません');
+            // その日の勤怠データを取得または新規作成
+            $attendance = Attendance::with('breaks', 'user')
+                ->where('user_id', Auth::id())
+                ->whereDate('date', $date)
+                ->first();
+
+            // 勤怠データが存在しない場合は新規作成
+            if (!$attendance) {
+                $attendance = Attendance::create([
+                    'user_id' => Auth::id(),
+                    'date' => $date,
+                    'status' => Attendance::STATUS_OFF_WORK,
+                ]);
+
+                // リレーションを読み込み直す
+                $attendance->load('breaks', 'user');
+            }
+        } else {
+            // ID形式の場合（従来通り）
+            $attendance = Attendance::with('breaks', 'user')->findOrFail($id);
+
+            // ログイン中のユーザーの勤怠データか確認
+            if ($attendance->user_id !== Auth::id()) {
+                abort(403, '権限がありません');
+            }
         }
 
         return view('attendance.detail', compact('attendance'));

@@ -30,7 +30,7 @@ class AttendanceCorrectionStoreRequest extends FormRequest
             'breaks' => ['nullable', 'array'],
             'breaks.*.break_start' => ['nullable', 'date_format:H:i'],
             'breaks.*.break_end' => ['nullable', 'date_format:H:i', 'after:breaks.*.break_start'],
-            'note' => ['required', 'string', 'max:500'],
+            'note' => ['required', 'string'],
         ];
     }
 
@@ -51,7 +51,6 @@ class AttendanceCorrectionStoreRequest extends FormRequest
             'breaks.*.break_end.date_format' => '休憩時間の形式が正しくありません',
             'breaks.*.break_end.after' => '休憩時間が不適切な値です',
             'note.required' => '備考を記入してください',
-            'note.max' => '備考は500文字以内で入力してください',
         ];
     }
 }

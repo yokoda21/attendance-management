@@ -29,9 +29,10 @@ class AttendanceController extends Controller
         $previousDate = $targetDate->copy()->subDay()->format('Y-m-d');
         $nextDate = $targetDate->copy()->addDay()->format('Y-m-d');
 
-        // 指定日の勤怠データを取得
+        // 指定日の勤怠データを取得（実際に勤務した人のみ：status > 0）
         $attendances = Attendance::with(['user', 'breaks'])
             ->whereDate('date', $targetDate)
+            ->where('status', '>', 0)  // 勤務外（status=0）は除外
             ->get()
             ->map(function ($attendance) {
                 // 休憩時間の合計を計算
@@ -53,10 +54,13 @@ class AttendanceController extends Controller
                     $totalWorkMinutes = $totalMinutes - $totalBreakMinutes;
                 }
 
-                // 時間:分 形式に変換
-                $attendance->total_break = sprintf('%d:%02d', floor($totalBreakMinutes / 60), $totalBreakMinutes % 60);
-                $attendance->total_work = sprintf('%d:%02d', floor($totalWorkMinutes / 60), $totalWorkMinutes % 60);
-
+                // 時間:分 形式に変換（0の場合は空文字）
+                $attendance->total_break = $totalBreakMinutes > 0
+                    ? sprintf('%d:%02d', floor($totalBreakMinutes / 60), $totalBreakMinutes % 60)
+                    : '';
+                $attendance->total_work = $totalWorkMinutes > 0
+                    ? sprintf('%d:%02d', floor($totalWorkMinutes / 60), $totalWorkMinutes % 60)
+                    : '';
                 return $attendance;
             });
 
@@ -71,11 +75,41 @@ class AttendanceController extends Controller
      */
     public function show($id)
     {
-        // 勤怠データを取得
-        $attendance = Attendance::with(['user', 'breaks'])->findOrFail($id);
+        // IDが日付形式（Y-m-d）かどうかを判定
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $id)) {
+            // 日付形式の場合
+            $date = \Carbon\Carbon::createFromFormat('Y-m-d', $id);
+
+            // URLから user_id を取得（クエリパラメータとして渡す必要がある）
+            $userId = request()->query('user_id');
+
+            if (!$userId) {
+                abort(400, 'ユーザーIDが指定されていません');
+            }
+
+            // その日の勤怠データを取得または新規作成
+            $attendance = Attendance::with('breaks', 'user')
+                ->where('user_id', $userId)
+                ->whereDate('date', $date)
+                ->first();
+
+            // 勤怠データが存在しない場合は新規作成
+            if (!$attendance) {
+                $attendance = Attendance::create([
+                    'user_id' => $userId,
+                    'date' => $date,
+                    'status' => Attendance::STATUS_OFF_WORK, //勤務外のステータスで作成
+                ]);
+                // 作成したIDでリダイレクト
+                return redirect()->route('admin.attendances.show',  $attendance->id);
+            }
+        } else {
+            // ID形式の場合（従来通り）
+            $attendance = Attendance::with('breaks', 'user')->findOrFail($id);
+        }
 
         // 承認待ちの修正申請があるか確認（FN038）
-        $hasPendingRequest = \App\Models\AttendanceCorrectionRequest::where('attendance_id', $id)
+        $hasPendingRequest = \App\Models\AttendanceCorrectionRequest::where('attendance_id', $attendance->id)
             ->where('status', \App\Models\AttendanceCorrectionRequest::STATUS_PENDING)
             ->exists();
 

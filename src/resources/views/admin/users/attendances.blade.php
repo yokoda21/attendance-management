@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', $user->name . 'さんの勤怠 - 管理者')
+@section('title', 'スタッフ別勤怠一覧')
 
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/admin-common.css') }}">
@@ -12,7 +12,7 @@
     <h2>{{ $user->name }}さんの勤怠</h2>
 
     <div class="date-selector">
-        <a href="{{ route('admin.attendance.staff', ['user_id' => $user->id]) }}" class=" btn-prev-date">
+        <a href="{{ route('admin.attendance.staff', ['user_id' => $user->id, 'month' => $previousMonth]) }}" class="btn-prev-date">
             <img src="{{ asset('images/arrow.png') }}" alt="前月" class="arrow-icon">
             前月
         </a>
@@ -40,53 +40,30 @@
             </tr>
         </thead>
         <tbody>
-            @php
-            // 月の全日付を生成
-            $daysInMonth = $targetMonth->daysInMonth;
-            $attendancesByDate = $attendances->keyBy(function($item) {
-            return \Carbon\Carbon::parse($item->date)->format('Y-m-d');
-            });
-            @endphp
-
-            @for($day = 1; $day <= $daysInMonth; $day++)
-                @php
-                $date=$targetMonth->copy()->day($day);
-                $dateStr = $date->format('Y-m-d');
-                $attendance = $attendancesByDate->get($dateStr);
-
-                // 曜日を取得
-                $dayOfWeek = ['日', '月', '火', '水', '木', '金', '土'][$date->dayOfWeek];
-                @endphp
-                <tr>
-                    <td>{{ $date->format('m/d') }}({{ $dayOfWeek }})</td>
-                    @if($attendance)
-                    <td>{{ $attendance->clock_in ? \Carbon\Carbon::parse($attendance->clock_in)->format('H:i') : '' }}</td>
-                    <td>{{ $attendance->clock_out ? \Carbon\Carbon::parse($attendance->clock_out)->format('H:i') : '' }}</td>
-                    <td>{{ $attendance->total_break }}</td>
-                    <td>{{ $attendance->total_work }}</td>
-                    <td>
-                        <a href="{{ route('admin.attendances.show', ['id' => $attendance->id]) }}" class="btn-detail">
-                            詳細
-                        </a>
-                    </td>
+            @foreach($attendances as $attendance)
+            <tr>
+                <td>{{ $attendance->date->format('m/d') }}({{ ['日', '月', '火', '水', '木', '金', '土'][$attendance->date->dayOfWeek] }})</td>
+                <td>{{ $attendance->clock_in ? $attendance->clock_in->format('H:i') : '' }}</td>
+                <td>{{ $attendance->clock_out ? $attendance->clock_out->format('H:i') : '' }}</td>
+                <td>{{ $attendance->total_break ?: '' }}</td>
+                <td>{{ $attendance->total_work ?: '' }}</td>
+                <td>
+                    @if($attendance->id)
+                    <a href="{{ route('admin.attendances.show', ['id' => $attendance->id]) }}" class="btn-detail">詳細</a>
                     @else
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <span class="btn-detail disabled">詳細</span>
-                    </td>
+                    <a href="{{ route('admin.attendances.show', ['id' => $attendance->date->format('Y-m-d'), 'user_id' => $user->id]) }}" class="btn-detail">詳細</a>
                     @endif
-                </tr>
-                @endfor
+                </td>
+            </tr>
+            @endforeach
         </tbody>
     </table>
 
     <div class="csv-export-container">
-        <a href="{{route('admin.attendance.staff.csv',  ['user_id' => $user->id, 'month' => $targetMonth->format('Y-m')]) }}" class="csv-button">
-            CSV出力
-        </a>
+        <form action="{{ route('admin.attendance.staff.csv', ['user_id' => $user->id]) }}" method="GET">
+            <input type="hidden" name="month" value="{{ $targetMonth->format('Y-m') }}">
+            <button type="submit" class="csv-button">CSV出力</button>
+        </form>
     </div>
 </div>
 @endsection

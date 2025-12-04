@@ -81,10 +81,9 @@
                     @endif
                 </td>
 
-                <!-- 詳細 -->
+                <!-- 詳細（勤務データあり：IDを使用） -->
                 <td>
-                    {{-- <a href="{{ route('attendance.detail', ['id' => $day['attendance']->id]) }}" class="btn-detail">詳細</a> --}}
-                    <a href="/attendance/{{ $day['attendance']->id }}" class="btn-detail">詳細</a>
+                    <a href="{{ route('attendance.detail', ['id' => $day['attendance']->id]) }}" class="btn-detail">詳細</a>
                 </td>
                 @else
                 <!-- 勤務データがない場合 -->
@@ -92,7 +91,10 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td></td>
+                <!-- 詳細（勤務データなし：日付を使用） -->
+                <td>
+                    <a href="{{ route('attendance.detail', ['id' => $day['date']->format('Y-m-d')]) }}" class="btn-detail">詳細</a>
+                </td>
                 @endif
             </tr>
             @endforeach

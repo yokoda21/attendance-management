@@ -49,23 +49,26 @@
 
 /* 値 */
 .detail-value {
-    padding: 20px 30px;
+    flex: 1;
+    padding: 20px 30px 20px 150px;
     font-size: 16px;
-    font-weight: 400;
+    font-weight: 700;
     color: #000000;
-    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-wrap: wrap; 
+    align-items: center;
 }
 
 /* 時刻入力エリア */
 .time-range {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 30px;
 }
 
 .time-input {
     display: inline-block;
-    padding: 10px 20px;
+    padding: 5px 10px;
     background-color: #FFFFFF;
     border: 1px solid #D9D9D9;
     border-radius: 5px;
@@ -96,17 +99,17 @@ input[type="time"]::-webkit-inner-spin-button {
 
 /* 備考エリア */
 .note-area {
+    width: 275px;
+    min-height: 72px;
     padding: 15px;
     background-color: #FFFFFF;
     border: 1px solid #D9D9D9;
     border-radius: 5px;
-    min-height: 80px;
-    font-family: inter;
+    font-family: 'Inter', sans-serif;
     font-weight: 700;
-    font-size: 16px;
+    font-size: 14px;
     color: #000000;
     line-height: 1.6;
-    width: 100%;
     box-sizing: border-box;
     resize: none;
 }
@@ -136,6 +139,15 @@ input[type="time"]::-webkit-inner-spin-button {
 
 .btn-correction:hover {
     opacity: 0.8;
+}
+
+/* フィールドエラーメッセージ */
+.field-error-message {
+    color: #FF0000;
+    font-size: 14px;
+    margin-top: 8px;
+    font-weight: 400;
+    width: 100%;
 }
 
 /* 承認待ちメッセージ */

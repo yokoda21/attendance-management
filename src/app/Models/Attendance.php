@@ -39,6 +39,7 @@ class Attendance extends Model
     /**
      * ステータス定数
      */
+    const STATUS_OFF_WORK = 0;      // 勤務外
     const STATUS_CLOCKED_IN = 1;    // 出勤中
     const STATUS_ON_BREAK = 2;      // 休憩中
     const STATUS_CLOCKED_OUT = 3;   // 退勤済
