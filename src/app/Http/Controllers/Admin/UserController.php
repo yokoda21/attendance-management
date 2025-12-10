@@ -27,13 +27,13 @@ class UserController extends Controller
      * スタッフ別月次勤怠一覧画面（FN043, FN044, FN046）
      * 
      * @param Request $request
-     * @param int $user_id
+     * @param int $id
      * @return \Illuminate\View\View
      */
-    public function attendances(Request $request, $user_id)
+    public function attendances(Request $request, $id)
     {
         // ユーザーを取得
-        $user = User::findOrFail($user_id);
+        $user = User::findOrFail($id);
 
         // 月パラメータを取得（デフォルトは今月）
         $month = $request->input('month', \Carbon\Carbon::now()->format('Y-m'));
@@ -47,7 +47,7 @@ class UserController extends Controller
 
         // 指定月の勤怠データを取得
         $attendanceRecords = \App\Models\Attendance::with(['breaks'])
-            ->where('user_id', $user_id)
+            ->where('user_id', $id)
             ->whereYear('date', $targetMonth->year)
             ->whereMonth('date', $targetMonth->month)
             ->orderBy('date', 'asc')
@@ -115,15 +115,14 @@ class UserController extends Controller
 
     /**
      * CSV出力機能（FN045）
-     * 
-     * @param Request $request
-     * @param int $user_id
+     * * @param Request $request
+     * @param int $id
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
-    public function exportCsv(Request $request, $user_id)
+    public function exportCsv(Request $request, $id)
     {
         // ユーザーを取得
-        $user = User::findOrFail($user_id);
+        $user = User::findOrFail($id);
 
         // 月パラメータを取得
         $month = $request->input('month', \Carbon\Carbon::now()->format('Y-m'));
@@ -131,7 +130,7 @@ class UserController extends Controller
 
         // 指定月の勤怠データを取得
         $attendances = \App\Models\Attendance::with(['breaks'])
-            ->where('user_id', $user_id)
+            ->where('user_id', $id)
             ->whereYear('date', $targetMonth->year)
             ->whereMonth('date', $targetMonth->month)
             ->orderBy('date', 'asc')
@@ -181,12 +180,22 @@ class UserController extends Controller
                         $totalWorkMinutes = $totalMinutes - $totalBreakMinutes;
                     }
 
+                    // ▼▼▼ 修正箇所：0分より大きい場合のみフォーマットし、それ以外は空文字にする ▼▼▼
+                    $breakStr = $totalBreakMinutes > 0
+                        ? sprintf('%d:%02d', floor($totalBreakMinutes / 60), $totalBreakMinutes % 60)
+                        : '';
+
+                    $workStr = $totalWorkMinutes > 0
+                        ? sprintf('%d:%02d', floor($totalWorkMinutes / 60), $totalWorkMinutes % 60)
+                        : '';
+                    // ▲▲▲ 修正箇所ここまで ▲▲▲
+
                     $row = [
                         $date->format('Y/m/d'),
                         $attendance->clock_in ? \Carbon\Carbon::parse($attendance->clock_in)->format('H:i') : '',
                         $attendance->clock_out ? \Carbon\Carbon::parse($attendance->clock_out)->format('H:i') : '',
-                        sprintf('%d:%02d', floor($totalBreakMinutes / 60), $totalBreakMinutes % 60),
-                        sprintf('%d:%02d', floor($totalWorkMinutes / 60), $totalWorkMinutes % 60),
+                        $breakStr, // 修正後の変数を使用
+                        $workStr,  // 修正後の変数を使用
                     ];
                 } else {
                     $row = [

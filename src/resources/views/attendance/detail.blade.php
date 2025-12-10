@@ -14,7 +14,7 @@
     $hasPendingCorrection = $attendance->correctionRequests()->where('status', 'pending')->exists();
     @endphp
 
-    <form action="{{ route('attendance-correction.store') }}" method="POST" novalidate>
+    <form action="{{ route('stamp_correction_request.store') }}" method="POST" novalidate>
         @csrf
         <input type="hidden" name="attendance_id" value="{{ $attendance->id }}">
 
@@ -113,7 +113,7 @@
                 </div>
             </div>
         </div>
-
+        
         <!-- 承認待ちメッセージ -->
         @if($hasPendingCorrection)
         <div class="pending-message">

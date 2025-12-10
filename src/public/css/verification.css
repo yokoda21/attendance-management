@@ -1,0 +1,86 @@
+/*   メール認証画面専用CSS - verification.css  */
+.verification__content {
+    text-align: center;
+    max-width: 720px;
+    height: auto;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.verification__message {
+    font-family: Inter;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 24px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-align: center;
+    width: 720px;
+    height: 58px;
+    margin: 0 auto;
+}
+
+.verification__message p {
+    margin: 8px 0;
+}
+
+.verification__actions {
+    text-align: center;
+}
+
+.verification__button {
+    margin: 100px auto 40px auto;
+    display: inline-block;
+}
+
+.form__button-gray {
+    background-color: #D9D9D9;
+    border: 1px solid #000000;
+    color: #000000;
+    padding: 15px 40px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 24px;
+    font-weight: 700;
+    font-style: bold;
+    min-width: 200px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.verification__resend {
+    margin-top: 30px;
+}
+
+.resend__link {
+    background: none;
+    border: none;
+    color: #007bff;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 0;
+    margin: 40px 0 0 0;    
+    text-decoration: none;
+}
+
+.form__success {
+    width: 680px;
+    margin: 0 auto 20px auto;
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.form__info {
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto 20px auto;
+    background-color: #cce7ff;
+    color: #0c5460;
+    border: 1px solid #b0daff;
+    padding: 15px;
+    border-radius: 4px;
+}

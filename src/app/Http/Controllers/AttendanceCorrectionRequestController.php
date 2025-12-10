@@ -102,7 +102,7 @@ class AttendanceCorrectionRequestController extends Controller
 
             DB::commit();
 
-            return redirect()->route('attendance-correction.index')
+            return redirect()->route('stamp_correction_request.list')
                 ->with('success', '修正申請を送信しました');
         } catch (\Exception $e) {
             DB::rollBack();

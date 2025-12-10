@@ -12,7 +12,7 @@
     <h2>{{ $targetDate->format('Y年n月j日') }}の勤怠</h2>
     
     <div class="date-selector">
-        <a href="{{ route('admin.attendances.index', ['date' => $previousDate]) }}" class="btn-prev-date">
+        <a href="{{ route('admin.attendance.list', ['date' => $previousDate]) }}" class="btn-prev-date">
             <img src="{{ asset('images/arrow.png') }}" alt="前日" class="arrow-icon">
             前日
         </a>
@@ -22,7 +22,7 @@
             <span class="current-date">{{ $targetDate->format('Y/m/d') }}</span>
         </div>
         
-        <a href="{{ route('admin.attendances.index', ['date' => $nextDate]) }}" class="btn-next-date">
+        <a href="{{ route('admin.attendance.list', ['date' => $nextDate]) }}" class="btn-next-date">
             翌日
             <img src="{{ asset('images/arrow.png') }}" alt="翌日" class="arrow-icon">
         </a>
@@ -48,7 +48,7 @@
                 <td>{{ $attendance->total_break ?? '-' }}</td>
                 <td>{{ $attendance->total_work ?? '-' }}</td>
                 <td>
-                    <a href="{{ route('admin.attendances.show', $attendance->id) }}" class="btn-detail">
+                    <a href="{{ route('admin.attendance.show', $attendance->id) }}" class="btn-detail">
                         詳細
                     </a>
                 </td>

@@ -28,7 +28,7 @@ class UserMiddleware
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
-            
+
             return redirect()->route('login')->withErrors([
                 'error' => 'このページへのアクセス権限がありません。',
             ]);

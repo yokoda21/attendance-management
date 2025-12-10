@@ -39,7 +39,7 @@ class AdminLoginController extends Controller
             $request->session()->regenerate();
 
             // 日次勤怠一覧画面にリダイレクト
-            return redirect()->route('admin.attendances.index');
+            return redirect()->route('admin.attendance.list');
         }
 
         // ログイン失敗時のエラーメッセージ（機能要件FN016）

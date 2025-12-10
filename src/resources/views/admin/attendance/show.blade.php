@@ -25,9 +25,6 @@
 
     @if($hasPendingRequest)
     <!-- 承認待ちの場合は編集不可（FN038） -->
-    <div class="error-message">
-        <p>承認待ちのため修正はできません。</p>
-    </div>
 
     <div class="attendance-detail-card">
         <div class="detail-row">
@@ -74,11 +71,19 @@
                 <div class="note-area">{{ $attendance->note ?? '' }}</div>
             </div>
         </div>
+
     </div>
+
+    <!-- 承認待ちメッセージ -->
+    @if($hasPendingRequest)
+    <div class="pending-message">
+        * 承認待ちのため修正はできません。
+    </div>
+    @endif
 
     @else
     <!-- 承認待ちでない場合は編集可能（FN040） -->
-    <form action="{{ route('admin.attendances.update', $attendance->id) }}" method="POST" novalidate>
+    <form action="{{ route('admin.attendance.update', $attendance->id) }}" method="POST" novalidate>
         @csrf
         @method('PUT')
 
@@ -176,11 +181,11 @@
             </div>
         </div>
 
-            <div class="button-container">
-                <button type="submit" class="correction-button">
-                    修正
-                </button>
-            </div>
+        <div class="button-container">
+            <button type="submit" class="correction-button">
+                修正
+            </button>
+        </div>
 
     </form>
     @endif

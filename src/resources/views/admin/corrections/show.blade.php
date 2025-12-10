@@ -65,7 +65,7 @@
     <!-- 承認ボタン -->
     <div class="approve-button-container">
         @if($correctionRequest->status === \App\Models\AttendanceCorrectionRequest::STATUS_PENDING)
-        <form method="POST" action="{{ route('admin.corrections.approve', $correctionRequest->id) }}">
+        <form method="POST" action="{{ route('stamp_correction_request.approve', $correctionRequest->id) }}">
             @csrf
             @method('PUT')
             <button type="submit" class="approve-button">承認</button>

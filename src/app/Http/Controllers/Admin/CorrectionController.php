@@ -68,18 +68,18 @@ class CorrectionController extends Controller
     public function approve($id)
     {
         \Log::info('Approve method called with ID: ' . $id);
-        
+
         DB::beginTransaction();
 
         try {
             \Log::info('Starting approval process');
-            
+
             // 修正申請を取得
             $correctionRequest = AttendanceCorrectionRequest::with([
                 'attendance',
                 'breakCorrections'
             ])->findOrFail($id);
-            
+
             \Log::info('Correction request found', ['status' => $correctionRequest->status]);
 
             // 承認待ちでない場合はエラー
@@ -109,7 +109,7 @@ class CorrectionController extends Controller
             foreach ($oldBreaks as $break) {
                 // 対応する修正後の休憩データを探す
                 $newBreak = $correctionRequest->breakCorrections->first();
-                
+
                 BreakHistory::create([
                     'break_id' => $break->id,
                     'changed_by' => auth()->id(),
@@ -155,9 +155,8 @@ class CorrectionController extends Controller
             DB::commit();
             \Log::info('Transaction committed successfully');
 
-            return redirect()->route('admin.corrections.index')
+            return redirect()->route('stamp_correction_request.list')
                 ->with('success', '修正申請を承認しました。');
-
         } catch (\Exception $e) {
             DB::rollBack();
             \Log::error('Approval failed', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);

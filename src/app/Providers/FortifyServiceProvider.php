@@ -28,21 +28,15 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // ログインビューの設定を追加
-        Fortify::loginView(function () {
-            return view('auth.login');
-        });
-
-        // 登録ビューの設定を追加
-        Fortify::registerView(function () {
-            return view('auth.register');
-        });
-
-        Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
+
+        // メール認証画面のビュー指定
+        Fortify::verifyEmailView(function () {
+            return view('auth.verify-email');
+        });
 
         RateLimiter::for('login', function (Request $request) {
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())) . '|' . $request->ip());

@@ -101,7 +101,7 @@ class AttendanceController extends Controller
                     'status' => Attendance::STATUS_OFF_WORK, //勤務外のステータスで作成
                 ]);
                 // 作成したIDでリダイレクト
-                return redirect()->route('admin.attendances.show',  $attendance->id);
+                return redirect()->route('admin.attendance.show',  $attendance->id);
             }
         } else {
             // ID形式の場合（従来通り）
@@ -156,7 +156,7 @@ class AttendanceController extends Controller
 
             \DB::commit();
 
-            return redirect()->route('admin.attendances.show', $id)
+            return redirect()->route('admin.attendance.show', $id)
                 ->with('success', '勤怠情報を修正しました');
         } catch (\Exception $e) {
             \DB::rollBack();

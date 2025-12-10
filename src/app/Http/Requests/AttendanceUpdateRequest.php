@@ -29,7 +29,7 @@ class AttendanceUpdateRequest extends FormRequest
             'breaks' => ['nullable', 'array'],
             'breaks.*.break_start' => ['nullable', 'date_format:H:i'],
             'breaks.*.break_end' => ['nullable', 'date_format:H:i', 'after:breaks.*.break_start'],
-            'note' => ['nullable', 'string', 'max:500'],
+            'note' => ['required', 'string', 'max:500'],
         ];
     }
 
@@ -49,7 +49,43 @@ class AttendanceUpdateRequest extends FormRequest
             'breaks.*.break_start.date_format' => '休憩時間の形式が正しくありません',
             'breaks.*.break_end.date_format' => '休憩時間の形式が正しくありません',
             'breaks.*.break_end.after' => '休憩時間が不適切な値です',
+            'note.required' => '備考を記入してください',
             'note.max' => '備考は500文字以内で入力してください',
         ];
+    }
+
+
+    /**
+     * Configure the validator instance.
+     *
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @return void
+     */
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $clockOut = $this->input('clock_out');
+            $breaks = $this->input('breaks', []);
+
+            if ($clockOut && $breaks) {
+                foreach ($breaks as $index => $break) {
+                    // 休憩開始が退勤時間より後の場合
+                    if (isset($break['break_start']) && $break['break_start'] > $clockOut) {
+                        $validator->errors()->add(
+                            "breaks.{$index}.break_start",
+                            '休憩時間が不適切な値です'
+                        );
+                    }
+
+                    // 休憩終了が退勤時間より後の場合
+                    if (isset($break['break_end']) && $break['break_end'] > $clockOut) {
+                        $validator->errors()->add(
+                            "breaks.{$index}.break_end",
+                            '休憩時間もしくは退勤時間が不適切な値です'
+                        );
+                    }
+                }
+            }
+        });
     }
 }

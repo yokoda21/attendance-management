@@ -12,7 +12,7 @@
     <h2>{{ $user->name }}さんの勤怠</h2>
 
     <div class="date-selector">
-        <a href="{{ route('admin.attendance.staff', ['user_id' => $user->id, 'month' => $previousMonth]) }}" class="btn-prev-date">
+        <a href="{{ route('admin.attendance.staff', ['id' => $user->id, 'month' => $previousMonth]) }}" class="btn-prev-date">
             <img src="{{ asset('images/arrow.png') }}" alt="前月" class="arrow-icon">
             前月
         </a>
@@ -22,7 +22,7 @@
             <span class="current-date">{{ $targetMonth->format('Y/m') }}</span>
         </div>
 
-        <a href="{{ route('admin.attendance.staff', ['user_id' => $user->id, 'month' => $nextMonth]) }}" class="btn-next-date">
+        <a href="{{ route('admin.attendance.staff', ['id' => $user->id, 'month' => $nextMonth]) }}" class="btn-next-date">
             翌月
             <img src="{{ asset('images/arrow.png') }}" alt="翌月" class="arrow-icon arrow-right">
         </a>
@@ -49,9 +49,9 @@
                 <td>{{ $attendance->total_work ?: '' }}</td>
                 <td>
                     @if($attendance->id)
-                    <a href="{{ route('admin.attendances.show', ['id' => $attendance->id]) }}" class="btn-detail">詳細</a>
+                    <a href="{{ route('admin.attendance.show', ['id' => $attendance->id]) }}" class="btn-detail">詳細</a>
                     @else
-                    <a href="{{ route('admin.attendances.show', ['id' => $attendance->date->format('Y-m-d'), 'user_id' => $user->id]) }}" class="btn-detail">詳細</a>
+                    <a href="{{ route('admin.attendance.show', ['id' => $attendance->date->format('Y-m-d'), 'user_id' => $user->id]) }}" class="btn-detail">詳細</a>
                     @endif
                 </td>
             </tr>
@@ -60,7 +60,7 @@
     </table>
 
     <div class="csv-export-container">
-        <form action="{{ route('admin.attendance.staff.csv', ['user_id' => $user->id]) }}" method="GET">
+        <form action="{{ route('admin.attendance.staff.csv', ['id' => $user->id]) }}" method="GET">
             <input type="hidden" name="month" value="{{ $targetMonth->format('Y-m') }}">
             <button type="submit" class="csv-button">CSV出力</button>
         </form>

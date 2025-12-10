@@ -16,16 +16,18 @@
             <img src="{{ asset('images/logo.svg') }}" alt="COACHTECH" class="header-logo">
             <nav>
                 <ul>
+                    @auth
                     @if(isset($todayAttendance) && $todayAttendance && $todayAttendance->status == \App\Models\Attendance::STATUS_CLOCKED_OUT)
                     <!-- 退勤後のナビゲーション -->
                     <li><a href="{{ route('attendance.list') }}">今月の出勤一覧</a></li>
-                    <li><a href="{{ route('attendance-correction.index') }}">申請一覧</a></li>
+                    <li><a href="/stamp_correction_request/list">申請一覧</a></li>
                     @else
                     <!-- 通常のナビゲーション -->
                     <li><a href="{{ route('attendance.index') }}">勤怠</a></li>
                     <li><a href="{{ route('attendance.list') }}">勤怠一覧</a></li>
-                    <li><a href="{{ route('attendance-correction.index') }}">申請</a></li>
+                    <li><a href="/stamp_correction_request/list">申請</a></li>
                     @endif
+                    @endauth
                     <li>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf

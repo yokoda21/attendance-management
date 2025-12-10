@@ -53,4 +53,38 @@ class AttendanceCorrectionStoreRequest extends FormRequest
             'note.required' => '備考を記入してください',
         ];
     }
+
+    /**
+     * Configure the validator instance.
+     *
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @return void
+     */
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $clockOut = $this->input('clock_out');
+            $breaks = $this->input('breaks', []);
+
+            if ($clockOut && $breaks) {
+                foreach ($breaks as $index => $break) {
+                    // 休憩開始が退勤時間より後の場合
+                    if (isset($break['break_start']) && $break['break_start'] > $clockOut) {
+                        $validator->errors()->add(
+                            "breaks.{$index}.break_start",
+                            '休憩時間が不適切な値です'
+                        );
+                    }
+
+                    // 休憩終了が退勤時間より後の場合
+                    if (isset($break['break_end']) && $break['break_end'] > $clockOut) {
+                        $validator->errors()->add(
+                            "breaks.{$index}.break_end",
+                            '休憩時間もしくは退勤時間が不適切な値です'
+                        );
+                    }
+                }
+            }
+        });
+    }
 }

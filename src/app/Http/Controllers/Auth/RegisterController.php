@@ -46,7 +46,7 @@ class RegisterController extends Controller
         // 自動ログイン
         Auth::login($user);
 
-        // 打刻画面にリダイレクト（機能要件FN005: 会員登録直後、打刻画面に遷移すること）
-        return redirect('/attendance');
+        // メール認証画面にリダイレクト
+        return redirect()->route('verification.notice');
     }
 }

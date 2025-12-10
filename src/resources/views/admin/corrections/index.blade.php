@@ -13,11 +13,11 @@
 
     <!-- タブ切り替え -->
     <div class="admin-tab-container">
-        <a href="{{ route('admin.corrections.index', ['tab' => 'pending']) }}"
+        <a href="{{ route('stamp_correction_request.list', ['tab' => 'pending']) }}"
             class="admin-tab-button {{ $tab === 'pending' ? 'active' : '' }}">
             承認待ち
         </a>
-        <a href="{{ route('admin.corrections.index', ['tab' => 'approved']) }}"
+        <a href="{{ route('stamp_correction_request.list', ['tab' => 'approved']) }}"
             class="admin-tab-button {{ $tab === 'approved' ? 'active' : '' }}">
             承認済み
         </a>
@@ -49,7 +49,7 @@
                     <td>{{ $request->note }}</td>
                     <td>{{ \Carbon\Carbon::parse($request->created_at)->format('Y/m/d') }}</td>
                     <td>
-                        <a href="{{ route('admin.corrections.show', $request->id) }}" class="btn-detail">
+                        <a href="{{ route('stamp_correction_request.show', $request->id) }}" class="btn-detail">
                             詳細
                         </a>
                     </td>
@@ -91,7 +91,7 @@
                     <td>{{ $request->note }}</td>
                     <td>{{ \Carbon\Carbon::parse($request->created_at)->format('Y/m/d') }}</td>
                     <td>
-                        <a href="{{ route('admin.corrections.show', $request->id) }}" class="btn-detail">
+                        <a href="{{ route('stamp_correction_request.show', $request->id) }}" class="btn-detail">
                             詳細
                         </a>
                     </td>
