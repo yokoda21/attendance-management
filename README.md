@@ -76,15 +76,16 @@ composer install
 ```
 
 ## Laravel環境構築
-docker-compose exec php bash
-composer install
-環境変数の設定 「.env.example」ファイルを 「.env」ファイルに命名を変更。または、新しく.envファイルを作成、.envに以下の環境変数を追加
-・DB_CONNECTION=mysql
-・DB_HOST=mysql
-・DB_PORT=3306
-・DB_DATABASE=laravel_db
-・DB_USERNAME=laravel_user
-・DB_PASSWORD=laravel_pass
+docker-compose exec php bash  
+composer install  
+環境変数の設定 「.env.example」ファイルを 「.env」ファイルに命名を変更。または、新しく.envファイルを作成、.envに以下の環境変数を追加  
+・DB_CONNECTION=mysql  
+・DB_HOST=mysql  
+・DB_PORT=3306  
+・DB_DATABASE=laravel_db  
+・DB_USERNAME=laravel_user  
+・DB_PASSWORD=laravel_pass  
+
 
 # メール設定（Mailtrap）
 mailtrapというツールを使用しています。
