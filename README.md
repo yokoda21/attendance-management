@@ -105,13 +105,14 @@ Mailtrapというツールを使用しています。
 #### 7. アプリケーションキーの生成
 ```bash
 docker-compose exec php php artisan key:generate
+```
 
-#### マイグレーションの実行
+#### 8. マイグレーションの実行
 ```bash
 docker-compose exec php php artisan migrate
 ```
 
-#### シーディング
+#### 9. シーディング
 テストデータを投入する場合：
 ```bash
 docker-compose exec php php artisan db:seed
@@ -151,7 +152,8 @@ docker-compose exec php php artisan test --filter=UserRegistrationTest
 ```
 
 ### テストアカウント
-### 動作確認用のテストアカウントは、シーダー実行時に自動作成されます。
+動作確認用のテストアカウントは、シーダー実行時に自動作成されます。
+```
 
 一般ユーザー(10名いますが、一人のみ記載しています)  
 name: 山田花子  
