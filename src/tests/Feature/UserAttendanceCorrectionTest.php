@@ -17,11 +17,17 @@ class UserAttendanceCorrectionTest extends TestCase
     /**
      * ID 11: 勤怠詳細情報修正機能（一般ユーザー）
      * 出勤時間が退勤時間より後になっている場合、エラーメッセージが表示される
+     * 
+     * 機能要件 FN029:
+     * 「出勤時間もしくは退勤時間が不適切な値です」
      */
     public function test_clock_in_cannot_be_after_clock_out()
     {
-        $user = User::factory()->create(['role' => 0]);
-        
+        $user = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+        ]);
+
         $attendance = Attendance::create([
             'user_id' => $user->id,
             'date' => Carbon::today(),
@@ -30,24 +36,32 @@ class UserAttendanceCorrectionTest extends TestCase
             'status' => Attendance::STATUS_CLOCKED_OUT,
         ]);
 
-        $response = $this->actingAs($user)->post('/attendance/detail/' . $attendance->id, [
+        $response = $this->actingAs($user)->post('/stamp_correction_request', [
+            'attendance_id' => $attendance->id,
             'clock_in' => Carbon::now()->format('H:i'),
             'clock_out' => Carbon::now()->subHours(8)->format('H:i'),
-            'remarks' => '修正理由',
+            'note' => '修正理由',
         ]);
 
-        $response->assertSessionHasErrors('clock_in');
-        $this->assertEquals('出勤時間が不適切な値です', session('errors')->get('clock_in')[0]);
+        $response->assertSessionHasErrors();
+        // 出勤時間が退勤時間より後の場合のエラーメッセージ（機能要件 FN029）
+        $this->assertStringContainsString('出勤時間もしくは退勤時間が不適切な値です', session('errors')->first());
     }
 
     /**
      * ID 11: 勤怠詳細情報修正機能（一般ユーザー）
      * 休憩開始時間が退勤時間より後になっている場合、エラーメッセージが表示される
+     * 
+     * 機能要件 FN029:
+     * 「休憩時間が不適切な値です」
      */
     public function test_break_start_cannot_be_after_clock_out()
     {
-        $user = User::factory()->create(['role' => 0]);
-        
+        $user = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+        ]);
+
         $attendance = Attendance::create([
             'user_id' => $user->id,
             'date' => Carbon::today(),
@@ -62,7 +76,8 @@ class UserAttendanceCorrectionTest extends TestCase
             'break_end' => Carbon::now()->subHours(3),
         ]);
 
-        $response = $this->actingAs($user)->post('/attendance/detail/' . $attendance->id, [
+        $response = $this->actingAs($user)->post('/stamp_correction_request', [
+            'attendance_id' => $attendance->id,
             'clock_in' => Carbon::now()->subHours(8)->format('H:i'),
             'clock_out' => Carbon::now()->format('H:i'),
             'breaks' => [
@@ -71,21 +86,28 @@ class UserAttendanceCorrectionTest extends TestCase
                     'break_end' => Carbon::now()->addHours(2)->format('H:i'),
                 ]
             ],
-            'remarks' => '修正理由',
+            'note' => '修正理由',
         ]);
 
         $response->assertSessionHasErrors();
+        // 休憩開始時間が退勤時間より後の場合のエラーメッセージ（機能要件 FN029）
         $this->assertStringContainsString('休憩時間が不適切な値です', session('errors')->first());
     }
 
     /**
      * ID 11: 勤怠詳細情報修正機能（一般ユーザー）
      * 休憩終了時間が退勤時間より後になっている場合、エラーメッセージが表示される
+     * 
+     * 機能要件 FN029:
+     * 「休憩時間もしくは退勤時間が不適切な値です」
      */
     public function test_break_end_cannot_be_after_clock_out()
     {
-        $user = User::factory()->create(['role' => 0]);
-        
+        $user = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+        ]);
+
         $attendance = Attendance::create([
             'user_id' => $user->id,
             'date' => Carbon::today(),
@@ -100,7 +122,8 @@ class UserAttendanceCorrectionTest extends TestCase
             'break_end' => Carbon::now()->subHours(3),
         ]);
 
-        $response = $this->actingAs($user)->post('/attendance/detail/' . $attendance->id, [
+        $response = $this->actingAs($user)->post('/stamp_correction_request', [
+            'attendance_id' => $attendance->id,
             'clock_in' => Carbon::now()->subHours(8)->format('H:i'),
             'clock_out' => Carbon::now()->format('H:i'),
             'breaks' => [
@@ -109,21 +132,27 @@ class UserAttendanceCorrectionTest extends TestCase
                     'break_end' => Carbon::now()->addHour()->format('H:i'),
                 ]
             ],
-            'remarks' => '修正理由',
+            'note' => '修正理由',
         ]);
 
         $response->assertSessionHasErrors();
+        // 休憩終了時間が退勤時間より後の場合のエラーメッセージ（機能要件 FN029）
         $this->assertStringContainsString('休憩時間もしくは退勤時間が不適切な値です', session('errors')->first());
     }
 
     /**
      * ID 11: 勤怠詳細情報修正機能（一般ユーザー）
      * 備考欄が未入力の場合のエラーメッセージが表示される
+     * 
+     * フィールド名: note（remarksではない）
      */
     public function test_remarks_field_is_required()
     {
-        $user = User::factory()->create(['role' => 0]);
-        
+        $user = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+        ]);
+
         $attendance = Attendance::create([
             'user_id' => $user->id,
             'date' => Carbon::today(),
@@ -132,13 +161,15 @@ class UserAttendanceCorrectionTest extends TestCase
             'status' => Attendance::STATUS_CLOCKED_OUT,
         ]);
 
-        $response = $this->actingAs($user)->post('/attendance/detail/' . $attendance->id, [
+        $response = $this->actingAs($user)->post('/stamp_correction_request', [
+            'attendance_id' => $attendance->id,
             'clock_in' => Carbon::now()->subHours(8)->format('H:i'),
             'clock_out' => Carbon::now()->format('H:i'),
         ]);
 
-        $response->assertSessionHasErrors('remarks');
-        $this->assertEquals('備考を記入してください', session('errors')->get('remarks')[0]);
+        // フィールド名は'note'
+        $response->assertSessionHasErrors('note');
+        $this->assertEquals('備考を記入してください', session('errors')->get('note')[0]);
     }
 
     /**
@@ -147,9 +178,12 @@ class UserAttendanceCorrectionTest extends TestCase
      */
     public function test_correction_request_is_created_successfully()
     {
-        $user = User::factory()->create(['role' => 0]);
+        $user = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+        ]);
         $admin = User::factory()->create(['role' => 1]);
-        
+
         $attendance = Attendance::create([
             'user_id' => $user->id,
             'date' => Carbon::today(),
@@ -158,10 +192,11 @@ class UserAttendanceCorrectionTest extends TestCase
             'status' => Attendance::STATUS_CLOCKED_OUT,
         ]);
 
-        $response = $this->actingAs($user)->post('/attendance/detail/' . $attendance->id, [
+        $response = $this->actingAs($user)->post('/stamp_correction_request', [
+            'attendance_id' => $attendance->id,
             'clock_in' => Carbon::now()->subHours(9)->format('H:i'),
             'clock_out' => Carbon::now()->format('H:i'),
-            'remarks' => '打刻忘れのため修正',
+            'note' => '打刻忘れのため修正',
         ]);
 
         $this->assertDatabaseHas('attendance_correction_requests', [
@@ -181,8 +216,11 @@ class UserAttendanceCorrectionTest extends TestCase
      */
     public function test_pending_requests_are_displayed_in_user_list()
     {
-        $user = User::factory()->create(['role' => 0]);
-        
+        $user = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+        ]);
+
         $attendance = Attendance::create([
             'user_id' => $user->id,
             'date' => Carbon::today(),
@@ -191,17 +229,18 @@ class UserAttendanceCorrectionTest extends TestCase
             'status' => Attendance::STATUS_CLOCKED_OUT,
         ]);
 
+        // noteフィールドを追加
         AttendanceCorrectionRequest::create([
             'attendance_id' => $attendance->id,
             'user_id' => $user->id,
             'clock_in' => Carbon::now()->subHours(9),
             'clock_out' => Carbon::now(),
-            'remarks' => '修正理由',
+            'note' => '修正理由',
             'status' => 0,
         ]);
 
         $response = $this->actingAs($user)->get('/stamp_correction_request/list');
-        
+
         $response->assertStatus(200);
         $response->assertSee('修正理由');
     }
@@ -212,8 +251,11 @@ class UserAttendanceCorrectionTest extends TestCase
      */
     public function test_approved_requests_are_displayed_in_user_list()
     {
-        $user = User::factory()->create(['role' => 0]);
-        
+        $user = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+        ]);
+
         $attendance = Attendance::create([
             'user_id' => $user->id,
             'date' => Carbon::today(),
@@ -222,17 +264,18 @@ class UserAttendanceCorrectionTest extends TestCase
             'status' => Attendance::STATUS_CLOCKED_OUT,
         ]);
 
+        // noteフィールドを追加
         AttendanceCorrectionRequest::create([
             'attendance_id' => $attendance->id,
             'user_id' => $user->id,
             'clock_in' => Carbon::now()->subHours(9),
             'clock_out' => Carbon::now(),
-            'remarks' => '修正理由',
+            'note' => '修正理由',
             'status' => 1, // 承認済み
         ]);
 
         $response = $this->actingAs($user)->get('/stamp_correction_request/list?status=approved');
-        
+
         $response->assertStatus(200);
         $response->assertSee('修正理由');
     }
@@ -243,8 +286,11 @@ class UserAttendanceCorrectionTest extends TestCase
      */
     public function test_detail_button_redirects_to_attendance_detail()
     {
-        $user = User::factory()->create(['role' => 0]);
-        
+        $user = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+        ]);
+
         $attendance = Attendance::create([
             'user_id' => $user->id,
             'date' => Carbon::today(),
@@ -253,17 +299,18 @@ class UserAttendanceCorrectionTest extends TestCase
             'status' => Attendance::STATUS_CLOCKED_OUT,
         ]);
 
-        $correctionRequest = AttendanceCorrectionRequest::create([
+        // noteフィールドを追加
+        AttendanceCorrectionRequest::create([
             'attendance_id' => $attendance->id,
             'user_id' => $user->id,
             'clock_in' => Carbon::now()->subHours(9),
             'clock_out' => Carbon::now(),
-            'remarks' => '修正理由',
+            'note' => '修正理由',
             'status' => 0,
         ]);
 
         $response = $this->actingAs($user)->get('/attendance/detail/' . $attendance->id);
-        
+
         $response->assertStatus(200);
     }
 }

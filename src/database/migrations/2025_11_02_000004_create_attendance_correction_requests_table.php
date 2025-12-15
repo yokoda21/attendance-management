@@ -19,7 +19,7 @@ class CreateAttendanceCorrectionRequestsTable extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // 申請者
             $table->time('clock_in')->nullable();
             $table->time('clock_out')->nullable();
-            $table->text('note'); // 修正理由
+            $table->text('note')->nullable(); // 修正理由（修正申請時は必須だがDB上はnullable）
             $table->tinyInteger('status')->default(0)->comment('0:承認待ち, 1:承認済み');
             $table->timestamp('approved_at')->nullable();
             $table->foreignId('approved_by')->nullable()->constrained('users')->onDelete('set null'); // 承認者

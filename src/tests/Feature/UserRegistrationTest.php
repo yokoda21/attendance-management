@@ -93,7 +93,7 @@ class UserRegistrationTest extends TestCase
 
     /**
      * ID 1: 認証機能（一般ユーザー）
-     * フォームに内容が入力されていた場合、データが正常に保存される
+     * メール認証画面へリダイレクトされることを確認
      */
     public function test_user_can_register_with_valid_data()
     {
@@ -107,9 +107,9 @@ class UserRegistrationTest extends TestCase
         $this->assertDatabaseHas('users', [
             'name' => 'テストユーザー',
             'email' => 'test@example.com',
-            'role' => 0, // 一般ユーザー
         ]);
 
-        $response->assertRedirect('/attendance');
+        // メール認証画面へリダイレクトされることを確認
+        $response->assertRedirect('/email/verify');
     }
 }

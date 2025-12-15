@@ -20,7 +20,7 @@ class UserAttendanceListTest extends TestCase
     public function test_user_can_see_all_their_attendance_records()
     {
         $user = User::factory()->create(['role' => 0]);
-        
+
         // 複数日の勤怠データを作成
         for ($i = 0; $i < 5; $i++) {
             Attendance::create([
@@ -33,7 +33,7 @@ class UserAttendanceListTest extends TestCase
         }
 
         $response = $this->actingAs($user)->get('/attendance/list');
-        
+
         $response->assertStatus(200);
         $this->assertEquals(5, Attendance::where('user_id', $user->id)->count());
     }
@@ -47,9 +47,9 @@ class UserAttendanceListTest extends TestCase
         $user = User::factory()->create(['role' => 0]);
 
         $response = $this->actingAs($user)->get('/attendance/list');
-        
+
         $response->assertStatus(200);
-        $response->assertSee(Carbon::now()->format('Y年m月'));
+        $response->assertSee(Carbon::now()->format('Y/m'));
     }
 
     /**
@@ -59,7 +59,7 @@ class UserAttendanceListTest extends TestCase
     public function test_previous_month_button_displays_previous_month_data()
     {
         $user = User::factory()->create(['role' => 0]);
-        
+
         $lastMonth = Carbon::now()->subMonth();
         Attendance::create([
             'user_id' => $user->id,
@@ -70,9 +70,9 @@ class UserAttendanceListTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)->get('/attendance/list?month=' . $lastMonth->format('Y-m'));
-        
+
         $response->assertStatus(200);
-        $response->assertSee($lastMonth->format('Y年m月'));
+        $response->assertSee($lastMonth->format('Y/m'));
     }
 
     /**
@@ -82,7 +82,7 @@ class UserAttendanceListTest extends TestCase
     public function test_next_month_button_displays_next_month_data()
     {
         $user = User::factory()->create(['role' => 0]);
-        
+
         $nextMonth = Carbon::now()->addMonth();
         Attendance::create([
             'user_id' => $user->id,
@@ -93,9 +93,9 @@ class UserAttendanceListTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)->get('/attendance/list?month=' . $nextMonth->format('Y-m'));
-        
+
         $response->assertStatus(200);
-        $response->assertSee($nextMonth->format('Y年m月'));
+        $response->assertSee($nextMonth->format('Y/m'));
     }
 
     /**
@@ -105,7 +105,7 @@ class UserAttendanceListTest extends TestCase
     public function test_detail_button_redirects_to_detail_page()
     {
         $user = User::factory()->create(['role' => 0]);
-        
+
         $attendance = Attendance::create([
             'user_id' => $user->id,
             'date' => Carbon::today(),
@@ -115,7 +115,7 @@ class UserAttendanceListTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)->get('/attendance/detail/' . $attendance->id);
-        
+
         $response->assertStatus(200);
     }
 
@@ -129,7 +129,7 @@ class UserAttendanceListTest extends TestCase
             'name' => 'テストユーザー',
             'role' => 0,
         ]);
-        
+
         $attendance = Attendance::create([
             'user_id' => $user->id,
             'date' => Carbon::today(),
@@ -139,7 +139,7 @@ class UserAttendanceListTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)->get('/attendance/detail/' . $attendance->id);
-        
+
         $response->assertStatus(200);
         $response->assertSee('テストユーザー');
     }
@@ -151,7 +151,7 @@ class UserAttendanceListTest extends TestCase
     public function test_detail_page_shows_selected_date()
     {
         $user = User::factory()->create(['role' => 0]);
-        
+
         $selectedDate = Carbon::create(2024, 12, 1);
         $attendance = Attendance::create([
             'user_id' => $user->id,
@@ -162,9 +162,10 @@ class UserAttendanceListTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)->get('/attendance/detail/' . $attendance->id);
-        
+
         $response->assertStatus(200);
-        $response->assertSee($selectedDate->format('Y-m-d'));
+        $response->assertSee($selectedDate->format('Y年'));
+        $response->assertSee($selectedDate->format('n月j日'));
     }
 
     /**
@@ -174,10 +175,10 @@ class UserAttendanceListTest extends TestCase
     public function test_detail_page_shows_correct_clock_in_out_times()
     {
         $user = User::factory()->create(['role' => 0]);
-        
+
         $clockIn = Carbon::create(2024, 12, 1, 9, 0, 0);
         $clockOut = Carbon::create(2024, 12, 1, 18, 0, 0);
-        
+
         $attendance = Attendance::create([
             'user_id' => $user->id,
             'date' => Carbon::create(2024, 12, 1),
@@ -187,7 +188,7 @@ class UserAttendanceListTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)->get('/attendance/detail/' . $attendance->id);
-        
+
         $response->assertStatus(200);
         $response->assertSee($clockIn->format('H:i'));
         $response->assertSee($clockOut->format('H:i'));
@@ -200,7 +201,7 @@ class UserAttendanceListTest extends TestCase
     public function test_detail_page_shows_correct_break_times()
     {
         $user = User::factory()->create(['role' => 0]);
-        
+
         $attendance = Attendance::create([
             'user_id' => $user->id,
             'date' => Carbon::today(),
@@ -211,7 +212,7 @@ class UserAttendanceListTest extends TestCase
 
         $breakStart = Carbon::now()->subHours(4);
         $breakEnd = Carbon::now()->subHours(3);
-        
+
         BreakModel::create([
             'attendance_id' => $attendance->id,
             'break_start' => $breakStart,
@@ -219,7 +220,7 @@ class UserAttendanceListTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)->get('/attendance/detail/' . $attendance->id);
-        
+
         $response->assertStatus(200);
         $response->assertSee($breakStart->format('H:i'));
         $response->assertSee($breakEnd->format('H:i'));

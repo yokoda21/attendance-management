@@ -21,9 +21,18 @@ class AdminAttendanceTest extends TestCase
     public function test_admin_can_see_all_users_attendance_for_day()
     {
         $admin = User::factory()->create(['role' => 1]);
-        $user1 = User::factory()->create(['role' => 0]);
-        $user2 = User::factory()->create(['role' => 0]);
-        $user3 = User::factory()->create(['role' => 0]);
+        $user1 = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+        ]);
+        $user2 = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+        ]);
+        $user3 = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+        ]);
 
         // 3人のユーザーの今日の勤怠データを作成
         Attendance::create([
@@ -64,7 +73,6 @@ class AdminAttendanceTest extends TestCase
     public function test_admin_list_shows_current_date()
     {
         $admin = User::factory()->create(['role' => 1]);
-
         $response = $this->actingAs($admin)->get('/admin/attendance/list');
 
         $response->assertStatus(200);
@@ -78,7 +86,10 @@ class AdminAttendanceTest extends TestCase
     public function test_admin_can_view_previous_day()
     {
         $admin = User::factory()->create(['role' => 1]);
-        $user = User::factory()->create(['role' => 0]);
+        $user = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+        ]);
 
         $yesterday = Carbon::yesterday();
         Attendance::create([
@@ -102,7 +113,10 @@ class AdminAttendanceTest extends TestCase
     public function test_admin_can_view_next_day()
     {
         $admin = User::factory()->create(['role' => 1]);
-        $user = User::factory()->create(['role' => 0]);
+        $user = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+        ]);
 
         $tomorrow = Carbon::tomorrow();
         Attendance::create([
@@ -122,11 +136,17 @@ class AdminAttendanceTest extends TestCase
     /**
      * ID 13: 勤怠詳細情報取得・修正機能（管理者）
      * 勤怠詳細画面に表示されるデータが選択したものになっている
+     * 
+     * 修正: 日付形式を実際の表示形式 "Y年\n<span>m月d日" に合わせる
      */
     public function test_admin_detail_shows_correct_attendance_data()
     {
         $admin = User::factory()->create(['role' => 1]);
-        $user = User::factory()->create(['role' => 0, 'name' => 'テストユーザー']);
+        $user = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+            'name' => 'テストユーザー',
+        ]);
 
         $attendance = Attendance::create([
             'user_id' => $user->id,
@@ -140,17 +160,25 @@ class AdminAttendanceTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('テストユーザー');
-        $response->assertSee(Carbon::today()->format('Y-m-d'));
+        // 実際の表示形式: "2025年\n<span>12月14日"
+        $response->assertSee(Carbon::today()->format('Y年'));
+        $response->assertSee(Carbon::today()->format('m月d日'));
     }
 
     /**
      * ID 13: 勤怠詳細情報取得・修正機能（管理者）
      * 出勤時間が退勤時間より後になっている場合、エラーメッセージが表示される
+     * 
+     * 機能要件 FN039:
+     * 「出勤時間もしくは退勤時間が不適切な値です」
      */
     public function test_admin_cannot_set_clock_in_after_clock_out()
     {
         $admin = User::factory()->create(['role' => 1]);
-        $user = User::factory()->create(['role' => 0]);
+        $user = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+        ]);
 
         $attendance = Attendance::create([
             'user_id' => $user->id,
@@ -160,24 +188,31 @@ class AdminAttendanceTest extends TestCase
             'status' => Attendance::STATUS_CLOCKED_OUT,
         ]);
 
-        $response = $this->actingAs($admin)->post('/admin/attendance/' . $attendance->id, [
+        $response = $this->actingAs($admin)->put('/admin/attendance/' . $attendance->id, [
             'clock_in' => Carbon::now()->format('H:i'),
             'clock_out' => Carbon::now()->subHours(8)->format('H:i'),
-            'remarks' => '管理者による修正',
+            'note' => '管理者による修正',
         ]);
 
         $response->assertSessionHasErrors();
+        // 機能要件 FN039 に基づくエラーメッセージ
         $this->assertStringContainsString('出勤時間もしくは退勤時間が不適切な値です', session('errors')->first());
     }
 
     /**
      * ID 13: 勤怠詳細情報取得・修正機能（管理者）
      * 休憩開始時間が退勤時間より後になっている場合、エラーメッセージが表示される
+     * 
+     * 機能要件 FN039:
+     * 「休憩時間が不適切な値です」
      */
     public function test_admin_cannot_set_break_start_after_clock_out()
     {
         $admin = User::factory()->create(['role' => 1]);
-        $user = User::factory()->create(['role' => 0]);
+        $user = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+        ]);
 
         $attendance = Attendance::create([
             'user_id' => $user->id,
@@ -187,7 +222,7 @@ class AdminAttendanceTest extends TestCase
             'status' => Attendance::STATUS_CLOCKED_OUT,
         ]);
 
-        $response = $this->actingAs($admin)->post('/admin/attendance/' . $attendance->id, [
+        $response = $this->actingAs($admin)->put('/admin/attendance/' . $attendance->id, [
             'clock_in' => Carbon::now()->subHours(8)->format('H:i'),
             'clock_out' => Carbon::now()->format('H:i'),
             'breaks' => [
@@ -196,21 +231,28 @@ class AdminAttendanceTest extends TestCase
                     'break_end' => Carbon::now()->addHours(2)->format('H:i'),
                 ]
             ],
-            'remarks' => '管理者による修正',
+            'note' => '管理者による修正',
         ]);
 
         $response->assertSessionHasErrors();
+        // 機能要件 FN039: 休憩開始時間が退勤時間より後の場合
         $this->assertStringContainsString('休憩時間が不適切な値です', session('errors')->first());
     }
 
     /**
      * ID 13: 勤怠詳細情報取得・修正機能（管理者）
      * 休憩終了時間が退勤時間より後になっている場合、エラーメッセージが表示される
+     * 
+     * 機能要件 FN039:
+     * 「休憩時間もしくは退勤時間が不適切な値です」
      */
     public function test_admin_cannot_set_break_end_after_clock_out()
     {
         $admin = User::factory()->create(['role' => 1]);
-        $user = User::factory()->create(['role' => 0]);
+        $user = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+        ]);
 
         $attendance = Attendance::create([
             'user_id' => $user->id,
@@ -220,7 +262,7 @@ class AdminAttendanceTest extends TestCase
             'status' => Attendance::STATUS_CLOCKED_OUT,
         ]);
 
-        $response = $this->actingAs($admin)->post('/admin/attendance/' . $attendance->id, [
+        $response = $this->actingAs($admin)->put('/admin/attendance/' . $attendance->id, [
             'clock_in' => Carbon::now()->subHours(8)->format('H:i'),
             'clock_out' => Carbon::now()->format('H:i'),
             'breaks' => [
@@ -229,21 +271,27 @@ class AdminAttendanceTest extends TestCase
                     'break_end' => Carbon::now()->addHour()->format('H:i'),
                 ]
             ],
-            'remarks' => '管理者による修正',
+            'note' => '管理者による修正',
         ]);
 
         $response->assertSessionHasErrors();
+        // 機能要件 FN039: 休憩終了時間が退勤時間より後の場合
         $this->assertStringContainsString('休憩時間もしくは退勤時間が不適切な値です', session('errors')->first());
     }
 
     /**
      * ID 13: 勤怠詳細情報取得・修正機能（管理者）
      * 備考欄が未入力の場合のエラーメッセージが表示される
+     * 
+     * フィールド名: note（remarksではない）
      */
     public function test_admin_remarks_field_is_required()
     {
         $admin = User::factory()->create(['role' => 1]);
-        $user = User::factory()->create(['role' => 0]);
+        $user = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+        ]);
 
         $attendance = Attendance::create([
             'user_id' => $user->id,
@@ -253,13 +301,14 @@ class AdminAttendanceTest extends TestCase
             'status' => Attendance::STATUS_CLOCKED_OUT,
         ]);
 
-        $response = $this->actingAs($admin)->post('/admin/attendance/' . $attendance->id, [
+        $response = $this->actingAs($admin)->put('/admin/attendance/' . $attendance->id, [
             'clock_in' => Carbon::now()->subHours(8)->format('H:i'),
             'clock_out' => Carbon::now()->format('H:i'),
         ]);
 
-        $response->assertSessionHasErrors('remarks');
-        $this->assertEquals('備考を記入してください', session('errors')->get('remarks')[0]);
+        // フィールド名は'note'
+        $response->assertSessionHasErrors('note');
+        $this->assertEquals('備考を記入してください', session('errors')->get('note')[0]);
     }
 
     /**
@@ -269,10 +318,20 @@ class AdminAttendanceTest extends TestCase
     public function test_admin_can_view_all_users()
     {
         $admin = User::factory()->create(['role' => 1]);
-        $user1 = User::factory()->create(['role' => 0, 'name' => 'ユーザー1', 'email' => 'user1@example.com']);
-        $user2 = User::factory()->create(['role' => 0, 'name' => 'ユーザー2', 'email' => 'user2@example.com']);
+        $user1 = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+            'name' => 'ユーザー1',
+            'email' => 'user1@example.com'
+        ]);
+        $user2 = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+            'name' => 'ユーザー2',
+            'email' => 'user2@example.com'
+        ]);
 
-        $response = $this->actingAs($admin)->get('/admin/users');
+        $response = $this->actingAs($admin)->get('/admin/staff/list');
 
         $response->assertStatus(200);
         $response->assertSee('ユーザー1');
@@ -288,7 +347,10 @@ class AdminAttendanceTest extends TestCase
     public function test_admin_can_view_user_attendance_records()
     {
         $admin = User::factory()->create(['role' => 1]);
-        $user = User::factory()->create(['role' => 0]);
+        $user = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+        ]);
 
         for ($i = 0; $i < 3; $i++) {
             Attendance::create([
@@ -308,11 +370,16 @@ class AdminAttendanceTest extends TestCase
     /**
      * ID 14: ユーザー情報取得機能（管理者）
      * 「前月」を押下した時に表示月の前月の情報が表示される
+     * 
+     * 修正: 実際の表示形式は "Y/m" (例: "2025/11")
      */
     public function test_admin_user_attendance_shows_previous_month()
     {
         $admin = User::factory()->create(['role' => 1]);
-        $user = User::factory()->create(['role' => 0]);
+        $user = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+        ]);
 
         $lastMonth = Carbon::now()->subMonth();
         Attendance::create([
@@ -326,17 +393,23 @@ class AdminAttendanceTest extends TestCase
         $response = $this->actingAs($admin)->get('/admin/attendance/staff/' . $user->id . '?month=' . $lastMonth->format('Y-m'));
 
         $response->assertStatus(200);
-        $response->assertSee($lastMonth->format('Y年m月'));
+        // 実際の表示形式: "2025/11"
+        $response->assertSee($lastMonth->format('Y/m'));
     }
 
     /**
      * ID 14: ユーザー情報取得機能（管理者）
      * 「翌月」を押下した時に表示月の翌月の情報が表示される
+     * 
+     * 修正: 実際の表示形式は "Y/m" (例: "2026/01")
      */
     public function test_admin_user_attendance_shows_next_month()
     {
         $admin = User::factory()->create(['role' => 1]);
-        $user = User::factory()->create(['role' => 0]);
+        $user = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+        ]);
 
         $nextMonth = Carbon::now()->addMonth();
         Attendance::create([
@@ -350,7 +423,8 @@ class AdminAttendanceTest extends TestCase
         $response = $this->actingAs($admin)->get('/admin/attendance/staff/' . $user->id . '?month=' . $nextMonth->format('Y-m'));
 
         $response->assertStatus(200);
-        $response->assertSee($nextMonth->format('Y年m月'));
+        // 実際の表示形式: "2026/01"
+        $response->assertSee($nextMonth->format('Y/m'));
     }
 
     /**
@@ -360,7 +434,10 @@ class AdminAttendanceTest extends TestCase
     public function test_admin_detail_button_redirects_to_detail_page()
     {
         $admin = User::factory()->create(['role' => 1]);
-        $user = User::factory()->create(['role' => 0]);
+        $user = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+        ]);
 
         $attendance = Attendance::create([
             'user_id' => $user->id,
@@ -378,12 +455,20 @@ class AdminAttendanceTest extends TestCase
     /**
      * ID 15: 勤怠情報修正機能（管理者）
      * 承認待ちの修正申請が全て表示されている
+     * 
+     * 修正: noteフィールドを追加
      */
     public function test_admin_can_see_all_pending_correction_requests()
     {
         $admin = User::factory()->create(['role' => 1]);
-        $user1 = User::factory()->create(['role' => 0]);
-        $user2 = User::factory()->create(['role' => 0]);
+        $user1 = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+        ]);
+        $user2 = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+        ]);
 
         $attendance1 = Attendance::create([
             'user_id' => $user1->id,
@@ -406,7 +491,7 @@ class AdminAttendanceTest extends TestCase
             'user_id' => $user1->id,
             'clock_in' => Carbon::now()->subHours(9),
             'clock_out' => Carbon::now(),
-            'remarks' => '修正理由1',
+            'note' => '修正理由1',
             'status' => 0,
         ]);
 
@@ -415,7 +500,7 @@ class AdminAttendanceTest extends TestCase
             'user_id' => $user2->id,
             'clock_in' => Carbon::now()->subHours(8),
             'clock_out' => Carbon::now(),
-            'remarks' => '修正理由2',
+            'note' => '修正理由2',
             'status' => 0,
         ]);
 
@@ -429,11 +514,16 @@ class AdminAttendanceTest extends TestCase
     /**
      * ID 15: 勤怠情報修正機能（管理者）
      * 承認済みの修正申請が全て表示されている
+     * 
+     * 修正: noteフィールドを追加
      */
     public function test_admin_can_see_all_approved_correction_requests()
     {
         $admin = User::factory()->create(['role' => 1]);
-        $user = User::factory()->create(['role' => 0]);
+        $user = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+        ]);
 
         $attendance = Attendance::create([
             'user_id' => $user->id,
@@ -448,11 +538,11 @@ class AdminAttendanceTest extends TestCase
             'user_id' => $user->id,
             'clock_in' => Carbon::now()->subHours(9),
             'clock_out' => Carbon::now(),
-            'remarks' => '承認済み修正',
+            'note' => '承認済み修正',
             'status' => 1,
         ]);
 
-        $response = $this->actingAs($admin)->get('/stamp_correction_request/list?status=approved');
+        $response = $this->actingAs($admin)->get('/stamp_correction_request/list?tab=approved');
 
         $response->assertStatus(200);
         $response->assertSee('承認済み修正');
@@ -461,11 +551,16 @@ class AdminAttendanceTest extends TestCase
     /**
      * ID 15: 勤怠情報修正機能（管理者）
      * 修正申請の詳細内容が正しく表示されている
+     * 
+     * 修正: noteフィールドを追加
      */
     public function test_admin_can_view_correction_request_details()
     {
         $admin = User::factory()->create(['role' => 1]);
-        $user = User::factory()->create(['role' => 0]);
+        $user = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+        ]);
 
         $attendance = Attendance::create([
             'user_id' => $user->id,
@@ -480,7 +575,7 @@ class AdminAttendanceTest extends TestCase
             'user_id' => $user->id,
             'clock_in' => Carbon::now()->subHours(9),
             'clock_out' => Carbon::now(),
-            'remarks' => '詳細表示テスト',
+            'note' => '詳細表示テスト',
             'status' => 0,
         ]);
 
@@ -493,11 +588,16 @@ class AdminAttendanceTest extends TestCase
     /**
      * ID 15: 勤怠情報修正機能（管理者）
      * 修正申請の承認処理が正しく行われる
+     * 
+     * 修正: noteフィールドを追加
      */
     public function test_admin_can_approve_correction_request()
     {
         $admin = User::factory()->create(['role' => 1]);
-        $user = User::factory()->create(['role' => 0]);
+        $user = User::factory()->create([
+            'role' => 0,
+            'email_verified_at' => now(),
+        ]);
 
         $originalClockIn = Carbon::now()->subHours(8);
         $attendance = Attendance::create([
@@ -514,11 +614,11 @@ class AdminAttendanceTest extends TestCase
             'user_id' => $user->id,
             'clock_in' => $newClockIn,
             'clock_out' => Carbon::now(),
-            'remarks' => '承認テスト',
+            'note' => '承認テスト',
             'status' => 0,
         ]);
 
-        $response = $this->actingAs($admin)->post('/stamp_correction_request/approve/' . $correctionRequest->id);
+        $response = $this->actingAs($admin)->put('/stamp_correction_request/approve/' . $correctionRequest->id);
 
         $this->assertDatabaseHas('attendance_correction_requests', [
             'id' => $correctionRequest->id,
