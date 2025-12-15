@@ -41,6 +41,7 @@
 -  勤怠情報の修正
 -  修正申請の承認
 -  CSV出力機能
+
 ---
 
 ## 環境構築
@@ -73,32 +74,37 @@ docker-compose exec php bash
 ```bash
 composer install
 ```
+#### 5. 環境変数の設定
+`.env.example`を`.env`にコピー：
+```bash
+cp .env.example .env
+```
 
-## Laravel環境構築
-docker-compose exec php bash  
-composer install  
-環境変数の設定 「.env.example」ファイルを 「.env」ファイルに命名を変更。または、新しく.envファイルを作成、.envに以下の環境変数を追加  
-・DB_CONNECTION=mysql  
-・DB_HOST=mysql  
-・DB_PORT=3306  
-・DB_DATABASE=laravel_db  
-・DB_USERNAME=laravel_user  
-・DB_PASSWORD=laravel_pass  
+または、新しく`.env`ファイルを作成し、以下を記述：
+```env
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=laravel_db
+DB_USERNAME=laravel_user
+DB_PASSWORD=laravel_pass
+```
 
+#### 6. メール設定（Mailtrap）
+Mailtrapというツールを使用しています。
 
-# メール設定（Mailtrap）
-mailtrapというツールを使用しています。
-以下のリンクから会員登録をしてください。
-https://mailtrap.io/
+1. 以下のリンクから会員登録：  
+   https://mailtrap.io/
 
-メールボックスのIntegrationsから 「laravel 7.x and 8.x」を選択し、
-.envファイルのMAIL_MAILERからMAIL_ENCRYPTIONまでの項目をコピー＆ペーストしてください。
-MAIL_FROM_ADDRESSは任意のメールアドレスを入力してください。　
+2. メールボックスのIntegrationsから「Laravel 7.x and 8.x」を選択
 
-####  アプリケーションキーの生成
+3. `.env`ファイルの`MAIL_MAILER`から`MAIL_ENCRYPTION`までの項目をコピー＆ペースト
+
+4. `MAIL_FROM_ADDRESS`に任意のメールアドレスを入力
+
+#### 7. アプリケーションキーの生成
 ```bash
 docker-compose exec php php artisan key:generate
-```
 
 #### マイグレーションの実行
 ```bash
