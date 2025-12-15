@@ -155,7 +155,7 @@ docker-compose exec php php artisan test --filter=UserRegistrationTest
 動作確認用のテストアカウントは、シーダー実行時に自動作成されます。
 ```
 
-一般ユーザー(10名いますが、一人のみ記載しています)  
+一般ユーザー(10名いますが、一名のみ記載しています)  
 name: 山田花子  
 email: yamada@example.com  
 パスワード: password123  
