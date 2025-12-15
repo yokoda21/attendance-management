@@ -19,6 +19,7 @@
     gap: 8px;
     font-size: 16px;
     font-weight: 700;
+    font-family: 'Inter', sans-serif;
     color: #737373;
     text-decoration: none;
     cursor: pointer;
@@ -27,6 +28,7 @@
 .admin-container .date-selector .arrow-icon {
     width: 20px;
     height: 15px;
+    opacity: 0.45;
 }
 
 .admin-container .date-selector .btn-next-date .arrow-icon {

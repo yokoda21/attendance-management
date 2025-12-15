@@ -35,7 +35,9 @@
     align-items: center;
     gap: 8px;
     font-size: 16px;
-    color: #000000;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    color: #737373;
     text-decoration: none;
     cursor: pointer;
 }
@@ -43,6 +45,7 @@
 .month-selector .arrow-icon {
     width: 20px;
     height: 15px;
+    opacity: 0.45;
 }
 
 .month-selector .btn-next-month .arrow-icon {
