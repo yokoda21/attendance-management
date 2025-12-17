@@ -64,15 +64,32 @@ class AttendanceUpdateRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
+            $clockIn = $this->input('clock_in');
             $clockOut = $this->input('clock_out');
             $breaks = $this->input('breaks', []);
 
-            if ($clockOut && $breaks) {
+            if ($clockIn && $clockOut && $breaks) {
                 foreach ($breaks as $index => $break) {
+                    // 休憩開始が出勤時間より前の場合
+                    if (isset($break['break_start']) && $break['break_start'] < $clockIn) {
+                        $validator->errors()->add(
+                            "breaks.{$index}.break_start",
+                            '休憩時間が不適切な値です'
+                        );
+                    }
+
                     // 休憩開始が退勤時間より後の場合
                     if (isset($break['break_start']) && $break['break_start'] > $clockOut) {
                         $validator->errors()->add(
                             "breaks.{$index}.break_start",
+                            '休憩時間が不適切な値です'
+                        );
+                    }
+
+                    // 休憩終了が出勤時間より前の場合
+                    if (isset($break['break_end']) && $break['break_end'] < $clockIn) {
+                        $validator->errors()->add(
+                            "breaks.{$index}.break_end",
                             '休憩時間が不適切な値です'
                         );
                     }

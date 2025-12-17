@@ -18,7 +18,9 @@
     align-items: center;
     gap: 8px;
     font-size: 16px;
-    color: #000000;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    color: #737373;
     text-decoration: none;
     cursor: pointer;
 }
@@ -26,6 +28,7 @@
 .user-attendance-list-container .date-selector .arrow-icon {
     width: 20px;
     height: 15px;
+    opacity: 0.45;
 }
 
 .user-attendance-list-container .date-selector .btn-next-date .arrow-icon {
