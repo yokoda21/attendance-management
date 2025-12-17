@@ -19,7 +19,7 @@
 | **インフラ** | Docker / Docker Compose |
 | **認証** | Laravel Fortify |
 | **テスト** | PHPUnit |
-| **メール** | Mailtrap（開発環境） |
+| **メール認証** | Mailtrap（開発環境） |
 
 ---
 
