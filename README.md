@@ -96,7 +96,7 @@ Mailtrapというツールを使用しています。
 1. 以下のリンクから会員登録：  
    https://mailtrap.io/
 
-2. メールボックスのIntegrationsから「Laravel 7.x and 8.x」を選択
+2. メールボックス(Email Sandboxという項目のstart testingをクリックする) My SandboxのIntegrationsタブでSMTPを選択、下にスクロールし、PHPから「Laravel 7.x and 8.x」を選択
 
 3. `.env`ファイルの`MAIL_MAILER`から`MAIL_ENCRYPTION`までの項目をコピー＆ペースト
 
