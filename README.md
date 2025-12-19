@@ -25,7 +25,7 @@
 ## データベース設計
 
 ### ER図
----<img width="821" height="1090" alt="10 31attendance-management" src="https://github.com/user-attachments/assets/134f7c83-18f0-473f-9f91-a2a902b5dafb" />
+<img width="821" height="1090" alt="10 31attendance-management" src="https://github.com/user-attachments/assets/134f7c83-18f0-473f-9f91-a2a902b5dafb" />
 
 ### テーブル仕様書
 
