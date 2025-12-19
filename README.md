@@ -6,9 +6,6 @@
 管理者は、勤怠管理・承認機能を備えています。
 メール認証にはMailtrapというツールを使用しています。
 
-
----
-
 ## 使用技術
 
 | カテゴリ | 技術 |
@@ -28,7 +25,7 @@
 ## データベース設計
 
 ### ER図
-![ER図](docs/er-diagram.png)
+---<img width="821" height="1090" alt="10 31attendance-management" src="https://github.com/user-attachments/assets/134f7c83-18f0-473f-9f91-a2a902b5dafb" />
 
 ### テーブル仕様書
 
