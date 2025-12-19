@@ -134,9 +134,51 @@ http://localhost:8080
 
 ---
 
-## テスト
+## PHPUnitテストの実行方法
 
-### テスト実行
+このプロジェクトでは67のテストが用意されています。テスト実行には専用のテストデータベース（test_database）を使用します。
+
+### テスト環境のセットアップ
+
+#### 1. .env.testingファイルの作成
+```bash
+cd src
+cp .env .env.testing
+```
+
+`.env.testing`を開いて、データベース名を以下に変更：
+```env
+DB_DATABASE=test_database
+```
+
+#### 2. テスト用データベースの作成
+```bash
+# MySQLコンテナに入る
+docker-compose exec mysql bash
+
+# rootユーザーでMySQL接続（パスワード: root）
+mysql -u root -p
+
+# test_databaseを作成
+create database test_database;
+
+# laravel_userに権限を付与
+GRANT ALL PRIVILEGES ON test_database.* TO 'laravel_user'@'%';
+FLUSH PRIVILEGES;
+
+# MySQLを終了
+exit
+exit
+```
+
+**注意**: `create database test_database;`実行時に「database exists」エラーが出た場合は、すでに作成されているため、権限付与のコマンド（GRANT〜）のみ実行してください。
+
+#### 3. テスト用データベースのマイグレーション
+```bash
+docker-compose exec php php artisan migrate:fresh --env=testing
+```
+
+#### 4. テストの実行
 ```bash
 # 全テストの実行
 docker-compose exec php php artisan test
@@ -151,9 +193,10 @@ docker-compose exec php php artisan test --verbose
 docker-compose exec php php artisan test --filter=UserRegistrationTest
 ```
 
+**重要**: テスト実行後、本番データベース（laravel_db）は影響を受けません。テストは必ずtest_databaseで実行されます。
+
 ### テストアカウント
 動作確認用のテストアカウントは、シーダー実行時に自動作成されます。
-```
 
 一般ユーザー(10名いますが、一名のみ記載しています)  
 name: 山田花子  
