@@ -23,6 +23,112 @@
 
 ---
 
+---
+
+## データベース設計
+
+### ER図
+![ER図](docs/er-diagram.png)
+
+### テーブル仕様書
+
+#### 1. usersテーブル（ユーザー情報）
+
+| カラム名 | 型 | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY | 説明 |
+|---------|-----|-------------|------------|----------|-------------|------|
+| id | bigIncrements | ○ | | | | ユーザーID |
+| name | string(255) | | | ○ | | ユーザー名 |
+| email | string(255) | | ○ | ○ | | メールアドレス |
+| email_verified_at | timestamp | | | | | メール認証日時 |
+| password | string(255) | | | ○ | | パスワード |
+| role | tinyinteger | | ○ | ○ | | 権限（0:一般, 1:管理者） |
+| remember_token | string(100) | | | | | ログイン保持トークン |
+| created_at | timestamp | | | | | 作成日時 |
+| updated_at | timestamp | | | | | 更新日時 |
+
+#### 2. attendancesテーブル（勤怠情報）
+
+| カラム名 | 型 | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY | 説明 |
+|---------|-----|-------------|------------|----------|-------------|------|
+| id | bigIncrements | ○ | | | | 勤怠ID |
+| user_id | unsignedBiginteger | | ○（dateと組み合わせ） | ○ | users(id) | ユーザーID |
+| date | date | | ○（user_idと組み合わせ） | ○ | | 勤怠日 |
+| clock_in | time | | | | | 出勤時刻 |
+| clock_out | time | | | | | 退勤時刻 |
+| status | tinyinteger | | | ○ | | ステータス |
+| note | text | | | | | 備考 |
+| created_at | timestamp | | | | | 作成日時 |
+| updated_at | timestamp | | | | | 更新日時 |
+
+#### 3. breaksテーブル（休憩情報）
+
+| カラム名 | 型 | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY | 説明 |
+|---------|-----|-------------|------------|----------|-------------|------|
+| id | bigIncrements | ○ | | | | 休憩ID |
+| attendance_id | unsignedBiginteger | | | ○ | attendances(id) | 勤怠ID |
+| break_start | time | | | ○ | | 休憩開始時刻 |
+| break_end | time | | | | | 休憩終了時刻 |
+| created_at | timestamp | | | | | 作成日時 |
+| updated_at | timestamp | | | | | 更新日時 |
+
+#### 4. attendance_correction_requestsテーブル（勤怠修正申請）
+
+| カラム名 | 型 | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY | 説明 |
+|---------|-----|-------------|------------|----------|-------------|------|
+| id | bigIncrements | ○ | | | | 修正申請ID |
+| attendance_id | unsignedBiginteger | | | ○ | attendances(id) | 勤怠ID |
+| user_id | unsignedBiginteger | | | ○ | users(id) | 申請者ID |
+| clock_in | time | | | | | 修正後出勤時刻 |
+| clock_out | time | | | | | 修正後退勤時刻 |
+| note | text | | | ○ | | 修正理由 |
+| status | tinyInteger | | | ○ | | ステータス（0:未承認, 1:承認済み） |
+| approved_at | timestamp | | | | | 承認日時 |
+| approved_by | unsignedBiginteger | | | | users(id) | 承認者ID |
+| created_at | timestamp | | | | | 作成日時 |
+| updated_at | timestamp | | | | | 更新日時 |
+
+#### 5. break_correctionsテーブル（休憩修正情報）
+
+| カラム名 | 型 | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY | 説明 |
+|---------|-----|-------------|------------|----------|-------------|------|
+| id | bigIncrements | ○ | | | | 休憩修正ID |
+| correction_request_id | unsignedBigInteger | | | ○ | attendance_correction_requests(id) | 修正申請ID |
+| break_start | time | | | ○ | | 修正後休憩開始時刻 |
+| break_end | time | | | ○ | | 修正後休憩終了時刻 |
+| created_at | timestamp | | | | | 作成日時 |
+| updated_at | timestamp | | | | | 更新日時 |
+
+#### 6. attendance_historiesテーブル（勤怠修正履歴）
+
+| カラム名 | 型 | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY | 説明 |
+|---------|-----|-------------|------------|----------|-------------|------|
+| id | bigIncrements | ○ | | | | 履歴ID |
+| attendance_id | unsignedBigInteger | | | ○ | attendances(id) | 勤怠ID |
+| changed_by | unsignedBigInteger | | | ○ | users(id) | 変更者ID |
+| changed_type | tinyInteger | | | ○ | | 変更種別 |
+| before_clock_in | time | | | | | 変更前出勤時刻 |
+| after_clock_in | time | | | | | 変更後出勤時刻 |
+| before_clock_out | time | | | | | 変更前退勤時刻 |
+| after_clock_out | time | | | | | 変更後退勤時刻 |
+| note | text | | | | | 備考 |
+| created_at | timestamp | | | | | 作成日時 |
+| updated_at | timestamp | | | | | 更新日時 |
+
+#### 7. break_historiesテーブル（休憩修正履歴）
+
+| カラム名 | 型 | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY | 説明 |
+|---------|-----|-------------|------------|----------|-------------|------|
+| id | bigIncrements | ○ | | | | 履歴ID |
+| break_id | unsignedBiginteger | | | ○ | breaks(id) | 休憩ID |
+| changed_by | unsignedBiginteger | | | ○ | users(id) | 変更者ID |
+| before_break_start | time | | | | | 変更前休憩開始時刻 |
+| after_break_start | time | | | | | 変更後休憩開始時刻 |
+| before_break_end | time | | | | | 変更前休憩終了時刻 |
+| after_break_end | time | | | | | 変更後休憩終了時刻 |
+| note | text | | | | | 備考 |
+| created_at | timestamp | | | | | 作成日時 |
+| updated_at | timestamp | | | | | 更新日時 |
+
 ## 主な機能
 
 ### 一般ユーザー機能
