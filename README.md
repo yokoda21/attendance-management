@@ -264,17 +264,7 @@ mysql -u root -p
 
 # test_databaseを作成
 create database test_database;
-
-# laravel_userに権限を付与
-GRANT ALL PRIVILEGES ON test_database.* TO 'laravel_user'@'%';
-FLUSH PRIVILEGES;
-
-# MySQLを終了
-exit
-exit
 ```
-
-**注意**: `create database test_database;`実行時に「database exists」エラーが出た場合は、すでに作成されているため、権限付与のコマンド（GRANT〜）のみ実行してください。
 
 #### 3. テスト用データベースのマイグレーション
 ```bash
