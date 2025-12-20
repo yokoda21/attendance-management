@@ -266,10 +266,18 @@ mysql -u root -p
 create database test_database;
 ```
 
+**注意**: 権限エラーが発生した場合は、MySQLプロンプトで以下を実行してください：
+```sql
+GRANT ALL PRIVILEGES ON test_database.* TO 'laravel_user'@'%';
+FLUSH PRIVILEGES;
+exit
+```
+
 #### 3. テスト用データベースのマイグレーション
 ```bash
 docker-compose exec php php artisan migrate:fresh --env=testing
 ```
+
 
 #### 4. テストの実行
 ```bash
@@ -291,16 +299,21 @@ docker-compose exec php php artisan test --filter=UserRegistrationTest
 ### テストアカウント
 動作確認用のテストアカウントは、シーダー実行時に自動作成されます。
 
-一般ユーザー(10名いますが、一名のみ記載しています)  
+**一般ユーザー**(10名いますが、一名のみ記載しています)  
 name: 山田花子  
 email: yamada@example.com  
 パスワード: password123  
 
-管理者  
+**管理者**  
 name: 管理者太郎  
 email: admin@example.com  
 パスワード: password123  
 
+---
+
+## 使い方
+
+### 一般ユーザー
 
 #### 1. 一般ユーザー会員登録
 1. トップページにアクセス
